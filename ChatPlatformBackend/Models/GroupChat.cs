@@ -6,5 +6,5 @@ public class GroupChat
     
     public string Name { get; set; }
 
-    public int ChatId { get; set; }
+    public List<User> Users { get; set; }
 }

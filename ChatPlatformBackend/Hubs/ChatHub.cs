@@ -1,6 +1,7 @@
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services;
+using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ChatPlatformBackend.Hubs;
@@ -33,7 +34,7 @@ public class ChatHub : Hub
 
         var dtoMessage = new DtoMessage(message);
 
-        await Clients.Groups(_groupService.GetUniqueGroupName(groupChatId)).SendAsync("ReceiveMessage", dtoMessage);
+        await Clients.Groups(_groupService.GetUniqueGroupChatName(groupChatId)).SendAsync("ReceiveMessage", dtoMessage);
     }
 
     public async Task SendMessageToPrivateChat(int privateChatId, string messageContent)

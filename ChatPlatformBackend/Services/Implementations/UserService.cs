@@ -1,7 +1,8 @@
 using ChatPlatformBackend.Models;
+using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ChatPlatformBackend.Services;
+namespace ChatPlatformBackend.Services.Implementations;
 
 public class UserService : IUserService
 {

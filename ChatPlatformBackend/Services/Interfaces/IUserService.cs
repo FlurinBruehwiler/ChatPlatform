@@ -1,7 +1,7 @@
 using ChatPlatformBackend.Models;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ChatPlatformBackend.Services;
+namespace ChatPlatformBackend.Services.Interfaces;
 
 public interface IUserService
 {

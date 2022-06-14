@@ -1,6 +1,7 @@
 using ChatPlatformBackend.Hubs;
 using ChatPlatformBackend.Models;
-using ChatPlatformBackend.Services;
+using ChatPlatformBackend.Services.Implementations;
+using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ChatAppContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetSection("ConnectionString").Value);
+    var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
+    options.UseSqlite(connectionString);
     options.EnableSensitiveDataLogging();
 });
 

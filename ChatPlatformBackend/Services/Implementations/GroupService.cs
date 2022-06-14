@@ -1,10 +1,11 @@
 using ChatPlatformBackend.Models;
+using ChatPlatformBackend.Services.Interfaces;
 
-namespace ChatPlatformBackend.Services;
+namespace ChatPlatformBackend.Services.Implementations;
 
 public class GroupService : IGroupService
 {
-    public string GetUniqueGroupName(int groupId)
+    public string GetUniqueGroupChatName(int groupId)
     {
         return $"groupChat_{groupId}";
     }
