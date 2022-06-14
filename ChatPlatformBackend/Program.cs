@@ -1,5 +1,6 @@
 using ChatPlatformBackend.Hubs;
 using ChatPlatformBackend.Models;
+using ChatPlatformBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddSignalR();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

@@ -5,7 +5,6 @@ public class PrivateChat
     public int PrivateChatId { get; set; }
 
     public int ChatId { get; set; }
-    public Chat Chat { get; set; }
 
     public int User1Id { get; set; }
     public User User1 { get; set; }

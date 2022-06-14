@@ -7,5 +7,4 @@ public class GroupChat
     public string Name { get; set; }
 
     public int ChatId { get; set; }
-    public Chat Chat { get; set; }  
 }
