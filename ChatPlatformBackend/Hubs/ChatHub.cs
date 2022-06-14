@@ -10,41 +10,23 @@ public class ChatHub : Hub
 {
     private readonly ChatAppContext _chatAppContext;
     private readonly IUserService _userService;
-    private readonly IGroupService _groupService;
+    private readonly IChatService _chatService;
 
-    public ChatHub(ChatAppContext chatAppContext, IUserService userService, IGroupService groupService)
+    public ChatHub(ChatAppContext chatAppContext, IUserService userService, IChatService chatService)
     {
         _chatAppContext = chatAppContext;
         _userService = userService;
-        _groupService = groupService;
+        _chatService = chatService;
     }
     
-    public async Task SendMessageToGroupChat(int groupChatId, string messageContent)
+    public async Task SendMessage(int chatId, string messageContent)
     {
-        var groupChat = _groupService.GetGroupChatById(groupChatId);
-        var user = _userService.GetUserByContextWithGroupChats(Context);
-
-        var message = new Message
-        {
-            GroupChat = groupChat,
-            Content = messageContent,
-            User = user,
-            DateTime = DateTime.Now,
-        };
-
-        var dtoMessage = new DtoMessage(message);
-
-        await Clients.Groups(_groupService.GetUniqueGroupChatName(groupChatId)).SendAsync("ReceiveMessage", dtoMessage);
-    }
-
-    public async Task SendMessageToPrivateChat(int privateChatId, string messageContent)
-    {
+        var chat = _chatService.GetChatById(chatId);
         var user = _userService.GetUserByContext(Context);
-        var privateChat = _groupService.GetPrivateChatById(privateChatId);
 
         var message = new Message
         {
-            PrivateChat = privateChat,
+            Chat = chat,
             Content = messageContent,
             User = user,
             DateTime = DateTime.Now,
@@ -52,6 +34,9 @@ public class ChatHub : Hub
 
         var dtoMessage = new DtoMessage(message);
 
-        await Clients.Groups(_userService.GetDecoratedUserName(user.Username)).SendAsync("ReceiveMessage", dtoMessage);
+        await Clients.Groups(_chatService.GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", dtoMessage);
+
+        _chatAppContext.Messages.Add(message);
+        await _chatAppContext.SaveChangesAsync();
     }
 }

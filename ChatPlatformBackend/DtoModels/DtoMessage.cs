@@ -8,7 +8,7 @@ public class DtoMessage
     {
         MessageContent = message.Content;
         Username = message.User.Username;
-        ChatId = message.GroupChatId ?? message.PrivateChatId ?? throw new Exception();
+        ChatId = message.ChatId;
     }
 
     public string MessageContent { get; set; }

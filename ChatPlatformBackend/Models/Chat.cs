@@ -1,8 +1,8 @@
 namespace ChatPlatformBackend.Models;
 
-public class GroupChat
+public class Chat
 {
-    public int GroupChatId { get; set; }
+    public int ChatId { get; set; }
     
     public string Name { get; set; }
 

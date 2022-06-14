@@ -6,7 +6,7 @@ namespace ChatPlatformBackend.Services.Implementations;
 
 public class UserService : IUserService
 {
-    public User GetUserByContextWithGroupChats(HubCallerContext context)
+    public User GetUserByContextWithChats(HubCallerContext context)
     {
         throw new NotImplementedException();
     }

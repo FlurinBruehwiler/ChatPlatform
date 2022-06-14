@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatPlatformBackend.Migrations
 {
     [DbContext(typeof(ChatAppContext))]
-    [Migration("20220614140638_InitialCreate")]
+    [Migration("20220614142214_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,9 +19,9 @@ namespace ChatPlatformBackend.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
-            modelBuilder.Entity("ChatPlatformBackend.Models.GroupChat", b =>
+            modelBuilder.Entity("ChatPlatformBackend.Models.Chat", b =>
                 {
-                    b.Property<int>("GroupChatId")
+                    b.Property<int>("ChatId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -29,15 +29,18 @@ namespace ChatPlatformBackend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("GroupChatId");
+                    b.HasKey("ChatId");
 
-                    b.ToTable("GroupChats");
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("ChatPlatformBackend.Models.Message", b =>
                 {
                     b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Content")
@@ -47,35 +50,16 @@ namespace ChatPlatformBackend.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("GroupChatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("PrivateChatId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("MessageId");
 
-                    b.HasIndex("GroupChatId");
-
-                    b.HasIndex("PrivateChatId");
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("ChatPlatformBackend.Models.PrivateChat", b =>
-                {
-                    b.Property<int>("PrivateChatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PrivateChatId");
-
-                    b.ToTable("PrivateChats");
                 });
 
             modelBuilder.Entity("ChatPlatformBackend.Models.User", b =>
@@ -96,50 +80,37 @@ namespace ChatPlatformBackend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("picturePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("GroupChatUser", b =>
+            modelBuilder.Entity("ChatUser", b =>
                 {
-                    b.Property<int>("GroupChatsGroupChatId")
+                    b.Property<int>("ChatsChatId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UsersUserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("GroupChatsGroupChatId", "UsersUserId");
+                    b.HasKey("ChatsChatId", "UsersUserId");
 
                     b.HasIndex("UsersUserId");
 
-                    b.ToTable("GroupChatUser");
-                });
-
-            modelBuilder.Entity("PrivateChatUser", b =>
-                {
-                    b.Property<int>("PrivateChatsPrivateChatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UsersUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PrivateChatsPrivateChatId", "UsersUserId");
-
-                    b.HasIndex("UsersUserId");
-
-                    b.ToTable("PrivateChatUser");
+                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("ChatPlatformBackend.Models.Message", b =>
                 {
-                    b.HasOne("ChatPlatformBackend.Models.GroupChat", "GroupChat")
+                    b.HasOne("ChatPlatformBackend.Models.Chat", "Chat")
                         .WithMany()
-                        .HasForeignKey("GroupChatId");
-
-                    b.HasOne("ChatPlatformBackend.Models.PrivateChat", "PrivateChat")
-                        .WithMany()
-                        .HasForeignKey("PrivateChatId");
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ChatPlatformBackend.Models.User", "User")
                         .WithMany("Messages")
@@ -147,33 +118,16 @@ namespace ChatPlatformBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GroupChat");
-
-                    b.Navigation("PrivateChat");
+                    b.Navigation("Chat");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GroupChatUser", b =>
+            modelBuilder.Entity("ChatUser", b =>
                 {
-                    b.HasOne("ChatPlatformBackend.Models.GroupChat", null)
+                    b.HasOne("ChatPlatformBackend.Models.Chat", null)
                         .WithMany()
-                        .HasForeignKey("GroupChatsGroupChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ChatPlatformBackend.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrivateChatUser", b =>
-                {
-                    b.HasOne("ChatPlatformBackend.Models.PrivateChat", null)
-                        .WithMany()
-                        .HasForeignKey("PrivateChatsPrivateChatId")
+                        .HasForeignKey("ChatsChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

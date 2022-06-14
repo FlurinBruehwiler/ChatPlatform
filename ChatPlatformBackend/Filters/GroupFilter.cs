@@ -10,12 +10,14 @@ public class GroupFilter : IHubFilter
     private readonly ChatAppContext _chatAppContext;
     private readonly IUserService _userService;
     private readonly IGroupService _groupService;
+    private readonly IChatService _chatService;
 
-    public GroupFilter(ChatAppContext chatAppContext, IUserService userService, IGroupService groupService)
+    public GroupFilter(ChatAppContext chatAppContext, IUserService userService, IGroupService groupService, IChatService chatService)
     {
         _chatAppContext = chatAppContext;
         _userService = userService;
         _groupService = groupService;
+        _chatService = chatService;
     }
     
     public async ValueTask<object?> InvokeMethodAsync(
@@ -26,10 +28,10 @@ public class GroupFilter : IHubFilter
     
     public Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next)
     {
-        var user = _userService.GetUserByContextWithGroupChats(context.Context);
-        foreach (var groupChat in user.GroupChats)
+        var user = _userService.GetUserByContextWithChats(context.Context);
+        foreach (var chat in user.Chats)
         {
-            context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId, _groupService.GetUniqueGroupChatName(groupChat.GroupChatId));
+            context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
         }
 
         context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId,  _userService.GetDecoratedUserName(user.Username));

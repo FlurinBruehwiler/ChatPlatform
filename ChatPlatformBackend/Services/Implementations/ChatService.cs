@@ -3,11 +3,11 @@ using ChatPlatformBackend.Services.Interfaces;
 
 namespace ChatPlatformBackend.Services.Implementations;
 
-public class GroupService : IGroupService
+public class ChatService : IChatService
 {
-    public string GetUniqueChatName(int chatId)
+    public string GetUniqueChatName(int groupId)
     {
-        return $"chat_{chatId}";
+        throw new NotImplementedException();
     }
 
     public Chat GetChatById(int chatId)
