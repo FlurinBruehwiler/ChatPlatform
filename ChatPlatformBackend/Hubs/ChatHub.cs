@@ -20,8 +20,8 @@ public class ChatHub : Hub
     
     public async Task SendMessageToGroupChat(int groupChatId, string messageContent)
     {
-        var groupChat = _chatAppContext.GroupChats.FirstOrDefault(x => x.GroupChatId == groupChatId);
-        var user = _userService.GetUserWithGroupChats(Context);
+        var groupChat = _groupService.GetGroupChatById(groupChatId);
+        var user = _userService.GetUserByContextWithGroupChats(Context);
 
         var message = new Message
         {
@@ -36,8 +36,21 @@ public class ChatHub : Hub
         await Clients.Groups(_groupService.GetUniqueGroupName(groupChatId)).SendAsync("ReceiveMessage", dtoMessage);
     }
 
-    public Task SendMessageToPrivateChat()
+    public async Task SendMessageToPrivateChat(int privateChatId, string messageContent)
     {
-        throw new NotImplementedException();
+        var user = _userService.GetUserByContext(Context);
+        var privateChat = _groupService.GetPrivateChatById(privateChatId);
+
+        var message = new Message
+        {
+            PrivateChat = privateChat,
+            Content = messageContent,
+            User = user,
+            DateTime = DateTime.Now,
+        };
+
+        var dtoMessage = new DtoMessage(message);
+
+        await Clients.Groups(_userService.GetDecoratedUserName(user.Username)).SendAsync("ReceiveMessage", dtoMessage);
     }
 }

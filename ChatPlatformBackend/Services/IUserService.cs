@@ -5,6 +5,8 @@ namespace ChatPlatformBackend.Services;
 
 public interface IUserService
 {
-    public User GetUserWithGroupChats(HubCallerContext context);
+    public User GetUserByContextWithGroupChats(HubCallerContext context);
+    public User GetUserByContext(HubCallerContext context);
+    public User GetUserById(int id);
     public string GetDecoratedUserName(string username);
 }

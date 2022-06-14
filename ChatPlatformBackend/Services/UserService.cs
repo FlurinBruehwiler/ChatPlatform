@@ -5,7 +5,17 @@ namespace ChatPlatformBackend.Services;
 
 public class UserService : IUserService
 {
-    public User GetUserWithGroupChats(HubCallerContext context)
+    public User GetUserByContextWithGroupChats(HubCallerContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public User GetUserByContext(HubCallerContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public User GetUserById(int id)
     {
         throw new NotImplementedException();
     }

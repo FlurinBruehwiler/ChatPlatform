@@ -25,7 +25,7 @@ public class GroupFilter : IHubFilter
     
     public Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next)
     {
-        var user = _userService.GetUserWithGroupChats(context.Context);
+        var user = _userService.GetUserByContextWithGroupChats(context.Context);
         foreach (var groupChat in user.GroupChats)
         {
             context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId, _groupService.GetUniqueGroupName(groupChat.GroupChatId));
