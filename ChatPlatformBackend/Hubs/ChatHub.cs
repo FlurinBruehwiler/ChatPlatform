@@ -9,33 +9,21 @@ namespace ChatPlatformBackend.Hubs;
 public class ChatHub : Hub
 {
     private readonly ChatAppContext _chatAppContext;
-    private readonly IUserService _userService;
     private readonly IChatService _chatService;
+    private readonly IMessageService _messageService;
 
-    public ChatHub(ChatAppContext chatAppContext, IUserService userService, IChatService chatService)
+    public ChatHub(ChatAppContext chatAppContext, IChatService chatService, IMessageService messageService)
     {
         _chatAppContext = chatAppContext;
-        _userService = userService;
         _chatService = chatService;
+        _messageService = messageService;
     }
     
     public async Task SendMessage(int chatId, string messageContent)
     {
-        var chat = _chatService.GetChatById(chatId);
-        var user = _userService.GetUserByContext(Context);
-
-        var message = new Message
-        {
-            Chat = chat,
-            Content = messageContent,
-            User = user,
-            DateTime = DateTime.Now,
-        };
-
+        var message = _messageService.CreateMessage(Context, chatId, messageContent);
         var dtoMessage = new DtoMessage(message);
-
-        await Clients.Groups(_chatService.GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", dtoMessage);
-
+        await _chatService.SendMessage(Clients, chatId, dtoMessage);
         _chatAppContext.Messages.Add(message);
         await _chatAppContext.SaveChangesAsync();
     }
