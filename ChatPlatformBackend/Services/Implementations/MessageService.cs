@@ -15,10 +15,10 @@ public class MessageService : IMessageService
         _userService = userService;
     }
     
-    public Message CreateMessage(HubCallerContext context, int chatId, string messageContent)
+    public async Task<Message> CreateMessageAsync(HubCallerContext context, int chatId, string messageContent)
     {
-        var chat = _chatService.GetChatById(chatId);
-        var user = _userService.GetUserByContext(context);
+        var chat = await _chatService.GetChatByIdAsync(chatId);
+        var user = await _userService.GetUserByContextAsync(context);
 
         var message = new Message
         {

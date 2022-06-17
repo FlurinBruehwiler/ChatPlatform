@@ -6,6 +6,6 @@ namespace ChatPlatformBackend.Services.Interfaces;
 public interface IUserService
 {
     public User GetUserByContextWithChats(HubCallerContext context);
-    public User GetUserByContext(HubCallerContext context);
-    public User GetUserById(int id);
+    public Task<User> GetUserByContextAsync(HubCallerContext context);
+    public Task<User> GetUserByIdAsync(int id);
 }

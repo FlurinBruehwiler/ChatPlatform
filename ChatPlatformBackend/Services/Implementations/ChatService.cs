@@ -2,26 +2,32 @@ using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatPlatformBackend.Services.Implementations;
 
 public class ChatService : IChatService
 {
     private readonly IChatService _chatService;
+    private readonly ChatAppContext _chatAppContext;
 
-    public ChatService(IChatService chatService)
+    public ChatService(IChatService chatService, ChatAppContext chatAppContext)
     {
         _chatService = chatService;
+        _chatAppContext = chatAppContext;
     }
     
     public string GetUniqueChatName(int groupId)
     {
-        throw new NotImplementedException();
+        return $"chat_{groupId}";
     }
 
-    public Chat GetChatById(int chatId)
+    public async Task<Chat> GetChatByIdAsync(int chatId)
     {
-        throw new NotImplementedException();
+        var chat = await _chatAppContext.Chats.FirstOrDefaultAsync(x => x.ChatId == chatId);
+        if (chat is null)
+            throw new Exception($"Chat with id {chatId} does not exist");
+        return chat;
     }
 
     public Task SendMessage(IHubCallerClients clients, int chatId, DtoMessage message)

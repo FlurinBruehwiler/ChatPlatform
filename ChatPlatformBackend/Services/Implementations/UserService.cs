@@ -1,23 +1,51 @@
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatPlatformBackend.Services.Implementations;
 
 public class UserService : IUserService
 {
+    private readonly ChatAppContext _chatAppContext;
+
+    public UserService(ChatAppContext chatAppContext)
+    {
+        _chatAppContext = chatAppContext;
+    }
+    
     public User GetUserByContextWithChats(HubCallerContext context)
     {
-        throw new NotImplementedException();
+        if(context.User?.Identity is null)
+            throw new Exception("No authentication provided");
+        
+        var user = _chatAppContext.Users.Where(x => x.Username == context.User.Identity.Name)
+            .Include(x => x.Chats).FirstOrDefault(); 
+        
+        if(user is null)
+            throw new Exception($"User with username {context.User.Identity.Name} does not exist");
+
+        return user;
     }
 
-    public User GetUserByContext(HubCallerContext context)
+    public async Task<User> GetUserByContextAsync(HubCallerContext context)
     {
-        throw new NotImplementedException();
+        if(context.User?.Identity is null)
+            throw new Exception("No authentication provided");
+        
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == context.User.Identity.Name); 
+        
+        if(user is null)
+            throw new Exception($"User with username {context.User.Identity.Name} does not exist");
+
+        return user;
     }
 
-    public User GetUserById(int id)
+    public async Task<User> GetUserByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.UserId == id);
+        if(user is null)
+            throw new Exception($"User with id {id} does not exist");
+        return user;
     }
 }

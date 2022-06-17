@@ -22,7 +22,7 @@ public class ChatHub : Hub
     
     public async Task SendMessage(int chatId, string messageContent)
     {
-        var message = _messageService.CreateMessage(Context, chatId, messageContent);
+        var message = await _messageService.CreateMessageAsync(Context, chatId, messageContent);
         var dtoMessage = new DtoMessage(message);
         await _chatService.SendMessage(Clients, chatId, dtoMessage);
         _chatAppContext.Messages.Add(message);
@@ -34,7 +34,7 @@ public class ChatHub : Hub
         var chat = new Chat
         {
             Name = name,
-            Users = new List<User>{_userService.GetUserByContext(Context)}
+            Users = new List<User>{await _userService.GetUserByContextAsync(Context)}
         };
 
         _chatAppContext.Chats.Add(chat);
@@ -44,16 +44,16 @@ public class ChatHub : Hub
 
     public async Task AddUserToChat(int chatId, int userId)
     {
-        var chat = _chatService.GetChatById(chatId);
-        var user = _userService.GetUserById(userId);
+        var chat = await _chatService.GetChatByIdAsync(chatId);
+        var user = await _userService.GetUserByIdAsync(userId);
         chat.Users.Add(user);
         await _chatAppContext.SaveChangesAsync();
     }
 
     public async Task RemoveUserFromChat(int chatId, int userId)
     {
-        var chat = _chatService.GetChatById(chatId);
-        var user = _userService.GetUserById(userId);
+        var chat = await _chatService.GetChatByIdAsync(chatId);
+        var user = await _userService.GetUserByIdAsync(userId);
         chat.Users.Remove(user);
         await _chatAppContext.SaveChangesAsync();
     }

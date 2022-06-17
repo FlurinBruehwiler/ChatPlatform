@@ -27,7 +27,7 @@ public class GroupFilter : IHubFilter
         {
             context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
         }
-
+        
         return next(context);
     }
 

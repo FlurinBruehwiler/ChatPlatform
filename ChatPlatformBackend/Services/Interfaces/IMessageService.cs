@@ -5,5 +5,5 @@ namespace ChatPlatformBackend.Services.Interfaces;
 
 public interface IMessageService
 {
-    public Message CreateMessage(HubCallerContext context, int chatId, string messageContent);
+    public Task<Message> CreateMessageAsync(HubCallerContext context, int chatId, string messageContent);
 }
