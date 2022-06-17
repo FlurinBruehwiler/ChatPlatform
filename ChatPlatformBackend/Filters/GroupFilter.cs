@@ -1,22 +1,16 @@
-using ChatPlatformBackend.Models;
-using ChatPlatformBackend.Services;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ChatPlatformBackend;
+namespace ChatPlatformBackend.Filters;
 
 public class GroupFilter : IHubFilter
 {
-    private readonly ChatAppContext _chatAppContext;
     private readonly IUserService _userService;
-    private readonly IGroupService _groupService;
     private readonly IChatService _chatService;
 
-    public GroupFilter(ChatAppContext chatAppContext, IUserService userService, IGroupService groupService, IChatService chatService)
+    public GroupFilter(IUserService userService, IChatService chatService)
     {
-        _chatAppContext = chatAppContext;
         _userService = userService;
-        _groupService = groupService;
         _chatService = chatService;
     }
     
@@ -33,8 +27,6 @@ public class GroupFilter : IHubFilter
         {
             context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
         }
-
-        context.Hub.Groups.AddToGroupAsync(context.Context.ConnectionId,  _userService.GetDecoratedUserName(user.Username));
 
         return next(context);
     }

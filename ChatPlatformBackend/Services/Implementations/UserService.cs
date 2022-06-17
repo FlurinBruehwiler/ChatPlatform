@@ -20,9 +20,4 @@ public class UserService : IUserService
     {
         throw new NotImplementedException();
     }
-
-    public string GetDecoratedUserName(string username)
-    {
-        return $"user_{username}";
-    }
 }
