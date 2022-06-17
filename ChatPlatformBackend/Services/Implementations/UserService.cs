@@ -48,4 +48,12 @@ public class UserService : IUserService
             throw new Exception($"User with id {id} does not exist");
         return user;
     }
+
+    public async Task<User> GetUserByUsernameAsync(string username)
+    {
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
+        if(user is null)
+            throw new Exception($"User with id {user} does not exist");
+        return user;
+    }
 }

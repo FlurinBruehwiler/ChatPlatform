@@ -1,8 +1,10 @@
+using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Hubs;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Implementations;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using static System.Text.Encoding;
@@ -44,6 +46,42 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapPost( "/register", async (DtoUser dtoUser, IAuthService authService, ChatAppContext chatAppContext, HttpResponse httpResponse) =>
+{
+    authService.CreatePasswordHash(dtoUser.Password, out var passwordHash, out var passwordSalt);
+    var user = new User
+    {
+        Username = dtoUser.Username,
+        PasswordHash = passwordHash,
+        PasswordSalt = passwordSalt
+    };
+    chatAppContext.Users.Add(user);
+    await chatAppContext.SaveChangesAsync();
+    httpResponse.Cookies.Append("X-Access-Token", authService.CreateToken(user), new CookieOptions
+    {
+        HttpOnly = true,
+        SameSite = SameSiteMode.Strict
+    });
+
+    return Results.Ok();
+});
+
+app.MapPost( "/login", async (DtoUser dtoUser, IAuthService authService, IUserService userService, HttpResponse httpResponse) =>
+{
+    var user = await userService.GetUserByUsernameAsync(dtoUser.Username);
+
+    if (!authService.VerifyPasswordHash(dtoUser.Password, user.PasswordHash, user.PasswordSalt))
+        return Results.BadRequest("Wrong Password");
+    
+    httpResponse.Cookies.Append("X-Access-Token", authService.CreateToken(user), new CookieOptions
+    {
+        HttpOnly = true,
+        SameSite = SameSiteMode.Strict
+    });
+
+    return Results.Ok();
+});
 
 app.MapHub<ChatHub>("/chatHub");
 app.Run();

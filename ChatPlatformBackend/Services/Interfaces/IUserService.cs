@@ -8,4 +8,5 @@ public interface IUserService
     public User GetUserByContextWithChats(HubCallerContext context);
     public Task<User> GetUserByContextAsync(HubCallerContext context);
     public Task<User> GetUserByIdAsync(int id);
+    public Task<User> GetUserByUsernameAsync(string username);
 }
