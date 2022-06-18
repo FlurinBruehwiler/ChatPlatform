@@ -1,4 +1,5 @@
 using ChatPlatformBackend.DtoModels;
+using ChatPlatformBackend.Exceptions;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
@@ -24,7 +25,7 @@ public class ChatService : IChatService
     {
         var chat = await _chatAppContext.Chats.FirstOrDefaultAsync(x => x.ChatId == chatId);
         if (chat is null)
-            throw new Exception($"Chat with id {chatId} does not exist");
+            throw new BadRequestException(Errors.ChatNotFound);
         return chat;
     }
 
