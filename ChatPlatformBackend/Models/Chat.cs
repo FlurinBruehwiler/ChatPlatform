@@ -4,7 +4,7 @@ public class Chat
 {
     public int ChatId { get; set; }
     
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public List<User> Users { get; set; }
+    public List<User> Users { get; set; } = null!;
 }

@@ -2,5 +2,5 @@
 
 public interface IServiceDefinition
 {
-    public void DefineServices(IServiceCollection services, WebApplicationBuilder builder);
+    public void DefineServices(WebApplicationBuilder builder);
 }

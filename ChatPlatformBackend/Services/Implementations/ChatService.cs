@@ -8,12 +8,10 @@ namespace ChatPlatformBackend.Services.Implementations;
 
 public class ChatService : IChatService
 {
-    private readonly IChatService _chatService;
     private readonly ChatAppContext _chatAppContext;
 
-    public ChatService(IChatService chatService, ChatAppContext chatAppContext)
+    public ChatService(ChatAppContext chatAppContext)
     {
-        _chatService = chatService;
         _chatAppContext = chatAppContext;
     }
     
@@ -32,6 +30,6 @@ public class ChatService : IChatService
 
     public Task SendMessage(IHubCallerClients clients, int chatId, DtoMessage message)
     {
-        return clients.Groups(_chatService.GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
+        return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
     }
 }

@@ -24,13 +24,9 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
         };
         chatAppContext.Users.Add(user);
         await chatAppContext.SaveChangesAsync();
-        httpResponse.Cookies.Append("X-Access-Token", authService.CreateToken(user), new CookieOptions
-        {
-            HttpOnly = true,
-            SameSite = SameSiteMode.Strict
-        });
+        authService.AppendAccessToken(httpResponse, user);
 
-        return Results.Ok();
+        return Results.Ok(user.UserId);
     }
     
     private async Task<IResult> Login(DtoUser dtoUser, [FromServices]IAuthService authService,[FromServices] IUserService userService, HttpResponse httpResponse)
@@ -40,12 +36,8 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
         if (!authService.VerifyPasswordHash(dtoUser.Password, user.PasswordHash, user.PasswordSalt))
             return Results.BadRequest("Wrong Password");
     
-        httpResponse.Cookies.Append("X-Access-Token", authService.CreateToken(user), new CookieOptions
-        {
-            HttpOnly = true,
-            SameSite = SameSiteMode.Strict
-        });
-
+        authService.AppendAccessToken(httpResponse, user);
+        
         return Results.Ok();
     }
 }

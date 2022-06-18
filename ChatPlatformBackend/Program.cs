@@ -1,11 +1,10 @@
-using ChatPlatformBackend.EndpointDefinitions;
 using ChatPlatformBackend.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
 
-builder.AddServices(typeof(IEndpointDefinition));
+builder.AddServices();
 
 var app = builder.Build();
 app.UseEndpointDefinitions();

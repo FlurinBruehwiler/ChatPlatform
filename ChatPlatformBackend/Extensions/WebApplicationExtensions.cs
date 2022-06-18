@@ -7,36 +7,26 @@ public static class WebApplicationExtensions
 {
     public static void UseEndpointDefinitions(this WebApplication app)
     {
-        var definitions = app.Services.GetRequiredService<IReadOnlyCollection<IEndpointDefinition>>();
-
-        foreach (var endpointDefinition in definitions)
+        var endpointDefinitions = typeof(IEndpointDefinition).Assembly.ExportedTypes
+            .Where(x => typeof(IEndpointDefinition).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+            .Select(Activator.CreateInstance).Cast<IEndpointDefinition>().ToList();
+            
+        foreach (var endpointDefinition in endpointDefinitions)
         {
             endpointDefinition.DefineEndpoints(app);
         }
     }
     
-    public static void AddServices(
-        this WebApplicationBuilder builder, params Type[] scanMarkers)
+    public static void AddServices(this WebApplicationBuilder builder)
     {
-        var serviceDefinitions = new List<IServiceDefinition>();
+        var serviceDefinitions =
+            typeof(IServiceDefinition).Assembly.ExportedTypes
+                .Where(x => typeof(IServiceDefinition).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                .Select(Activator.CreateInstance).Cast<IServiceDefinition>().ToList();
 
-        foreach (var marker in scanMarkers)
+        foreach (var serviceDefinition in serviceDefinitions)
         {
-            serviceDefinitions.AddRange(
-                marker.Assembly.ExportedTypes
-                    .Where(x => typeof(IServiceDefinition).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                    .Select(Activator.CreateInstance).Cast<IServiceDefinition>()
-            );
-        }
-
-        foreach (var endpointDefinition in serviceDefinitions)
-        {
-            endpointDefinition.DefineServices(builder.Services, builder);
-        }
-
-        if (serviceDefinitions is IReadOnlyCollection<IServiceDefinition> readOnlyCollection)
-        {
-            builder.Services.AddSingleton(readOnlyCollection);
+            serviceDefinition.DefineServices(builder);
         }
     }
 }

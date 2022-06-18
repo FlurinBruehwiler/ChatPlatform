@@ -5,9 +5,9 @@ namespace ChatPlatformBackend.ServiceDefinitions;
 
 public class DatabaseServiceDefinition : IServiceDefinition
 {
-    public void DefineServices(IServiceCollection services, WebApplicationBuilder builder)
+    public void DefineServices(WebApplicationBuilder builder)
     {
-        services.AddDbContext<ChatAppContext>(options =>
+        builder.Services.AddDbContext<ChatAppContext>(options =>
         {
             var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
             options.UseSqlite(connectionString);

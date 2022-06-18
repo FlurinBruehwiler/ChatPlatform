@@ -5,11 +5,11 @@ namespace ChatPlatformBackend.ServiceDefinitions;
 
 public class DependencyInjectionServiceDefinition : IServiceDefinition
 {
-    public void DefineServices(IServiceCollection services, WebApplicationBuilder builder)
+    public void DefineServices(WebApplicationBuilder builder)
     {
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IChatService, ChatService>();
-        services.AddScoped<IMessageService, MessageService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IChatService, ChatService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
     }
 }

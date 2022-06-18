@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -51,5 +50,14 @@ public class AuthService : IAuthService
         using var hmac = new HMACSHA512(passwordSalt);
         var computedHash = hmac.ComputeHash(UTF8.GetBytes(password));
         return computedHash.SequenceEqual(passwordHash);
+    }
+
+    public void AppendAccessToken(HttpResponse httpResponse, User user)
+    {
+        httpResponse.Cookies.Append("X-Access-Token", CreateToken(user), new CookieOptions
+        {
+            HttpOnly = true,
+            SameSite = SameSiteMode.Strict
+        });
     }
 }

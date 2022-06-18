@@ -6,9 +6,9 @@ namespace ChatPlatformBackend.ServiceDefinitions;
 
 public class AuthenticationServiceDefinition : IServiceDefinition
 {
-    public void DefineServices(IServiceCollection services, WebApplicationBuilder builder)
+    public void DefineServices(WebApplicationBuilder builder)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
