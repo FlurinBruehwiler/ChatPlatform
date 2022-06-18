@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
