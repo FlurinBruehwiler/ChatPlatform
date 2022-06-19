@@ -42,18 +42,18 @@ public class ChatHub : Hub
         return chat.ChatId;
     }
 
-    public async Task AddUserToChat(int chatId, int userId)
+    public async Task AddUserToChat(int chatId, string username)
     {
         var chat = await _chatService.GetChatByIdAsync(chatId);
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = await _userService.GetUserByUsernameAsync(username);
         chat.Users.Add(user);
         await _chatAppContext.SaveChangesAsync();
     }
 
-    public async Task RemoveUserFromChat(int chatId, int userId)
+    public async Task RemoveUserFromChat(int chatId, string username)
     {
         var chat = await _chatService.GetChatByIdAsync(chatId);
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = await _userService.GetUserByUsernameAsync(username);
         chat.Users.Remove(user);
         await _chatAppContext.SaveChangesAsync();
     }

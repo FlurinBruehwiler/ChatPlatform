@@ -44,15 +44,7 @@ public class UserService : IUserService
 
         return user;
     }
-
-    public async Task<User> GetUserByIdAsync(int id)
-    {
-        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.UserId == id);
-        if(user is null)
-            throw new BadRequestException(Errors.UserNotFound);
-        return user;
-    }
-
+    
     public async Task<User> GetUserByUsernameAsync(string username)
     {
         var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
