@@ -1,5 +1,3 @@
-import ChatSelection from "./ChatSelection";
-import Chat from "./Chat";
 import TestChats from "./examples/TestChats";
 
 function App() {

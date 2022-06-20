@@ -54,10 +54,16 @@ public class AuthService : IAuthService
 
     public void AppendAccessToken(HttpResponse httpResponse, User user)
     {
-        httpResponse.Cookies.Append("X-Access-Token", CreateToken(user), new CookieOptions
+        httpResponse.Cookies.Append("X-Access-Token2", CreateToken(user), new CookieOptions
         {
-            HttpOnly = true,
-            SameSite = SameSiteMode.Strict
+            SameSite = SameSiteMode.Strict,
+            Secure = false,
+            Domain = null,
+            HttpOnly = false,
+            IsEssential = true,
         });
+        //Access-Control-Allow-Credentials
+        httpResponse.Headers.AccessControlAllowCredentials = "true";
+        httpResponse.Headers.AccessControlAllowOrigin = "true";
     }
 }

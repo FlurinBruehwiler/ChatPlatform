@@ -53,7 +53,7 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<int> RegisterUser(DtoUser dtoUser, HttpResponse httpResponse)
+    public async Task RegisterUser(DtoUser dtoUser, HttpResponse httpResponse)
     {
         if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoUser.Username))
             throw new BadRequestException(Errors.UsernameAlreadyExists);
@@ -68,7 +68,6 @@ public class UserService : IUserService
         _chatAppContext.Users.Add(user);
         await _chatAppContext.SaveChangesAsync();
         _authService.AppendAccessToken(httpResponse, user);
-        return user.UserId;
     }
 
     public async Task LoginUser(DtoUser dtoUser, HttpResponse httpResponse)

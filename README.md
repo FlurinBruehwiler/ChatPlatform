@@ -1,11 +1,14 @@
 # ChatPlatform
 
 ## Dokumentation
+
 [Projekt Planung](https://github.com/FlurinBruehwiler/ChatPlatform/blob/main/Dokumentation/ProjektPlanung.pdf)
 
 ## Development
+
 appsettings.json in ./ChatPlatformBackend
-````
+
+```
 {
   "Logging": {
     "LogLevel": {
@@ -15,9 +18,11 @@ appsettings.json in ./ChatPlatformBackend
   },
   "AllowedHosts": "*"
 }
-````
+```
+
 appsettings.Development.json in ./ChatPlatformBackend
-````
+
+```
 {
   "Logging": {
     "LogLevel": {
@@ -25,7 +30,7 @@ appsettings.Development.json in ./ChatPlatformBackend
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "ConnectionString": "",
-  "JwtSecret": ""
+  "ConnectionString": "DataSource=PATH_TO_DB_FILE",
+  "JwtSecret": "32_CHARACTERS"
 }
-````
+```

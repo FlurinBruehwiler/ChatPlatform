@@ -22,7 +22,7 @@ public class AuthenticationServiceDefinition : IServiceDefinition
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["X-Access-Token"];
+                        context.Token = context.Request.Cookies["X-Access-Token2"];
                         return Task.CompletedTask;
                     }
                 };

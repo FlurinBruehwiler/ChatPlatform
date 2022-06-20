@@ -14,7 +14,8 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
 
     private async Task<IResult> Register(DtoUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
     {
-        return Results.Ok(await userService.RegisterUser(dtoUser, httpResponse));
+        await userService.RegisterUser(dtoUser, httpResponse);
+        return Results.Ok();
     }
     
     private async Task<IResult> Login(DtoUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
