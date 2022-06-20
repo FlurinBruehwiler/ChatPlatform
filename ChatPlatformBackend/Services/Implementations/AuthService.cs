@@ -62,8 +62,6 @@ public class AuthService : IAuthService
             HttpOnly = false,
             IsEssential = true,
         });
-        //Access-Control-Allow-Credentials
         httpResponse.Headers.AccessControlAllowCredentials = "true";
-        httpResponse.Headers.AccessControlAllowOrigin = "true";
     }
 }
