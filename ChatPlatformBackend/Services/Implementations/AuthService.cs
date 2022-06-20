@@ -21,7 +21,7 @@ public class AuthService : IAuthService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.UserId.ToString())
+            new(ClaimTypes.NameIdentifier, user.Username)
         };
 
         var key = new SymmetricSecurityKey(UTF8.GetBytes(_configuration.GetSection("JwtSecret").Value));

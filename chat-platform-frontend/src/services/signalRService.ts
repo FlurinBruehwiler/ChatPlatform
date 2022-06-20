@@ -13,10 +13,10 @@ class SignalRService {
       .catch((e: any) => console.log("Connection failed: ", e));
   }
 
-  createChat = () => {
+  createChat = (name: string) => {
     if (!this.connection) return;
 
-    this.connection.invoke("CreateChat").catch((err: any) => {
+    this.connection.invoke("CreateChat", name).catch((err: any) => {
       console.log(JSON.stringify(err));
     });
   };
