@@ -1,11 +1,11 @@
 import ChatSelection from "./ChatSelection";
 import Chat from "./Chat";
-import Test from "./Test";
+import TestChats from "./examples/TestChats";
 
 function App() {
   return (
     <div className={"grid grid-cols-main h-full"}>
-        <Test></Test>
+      <TestChats></TestChats>
     </div>
   );
 }
