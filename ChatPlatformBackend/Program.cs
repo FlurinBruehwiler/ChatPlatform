@@ -1,5 +1,6 @@
 using ChatPlatformBackend;
 using ChatPlatformBackend.Extensions;
+using ChatPlatformBackend.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,5 +17,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpointDefinitions();
+
+app.MapHub<ChatHub>("/chatHub");
+
 
 app.Run();

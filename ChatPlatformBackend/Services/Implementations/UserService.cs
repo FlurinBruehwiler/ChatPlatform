@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Exceptions;
 using ChatPlatformBackend.Models;
@@ -37,7 +38,9 @@ public class UserService : IUserService
         if(context.User?.Identity is null)
             throw new BadRequestException(Errors.NoAuth);
         
-        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == context.User.Identity.Name); 
+        var identity = (ClaimsIdentity)context.User.Identity;
+        var name = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == name); 
         
         if(user is null)
             throw new BadRequestException(Errors.UserNotFound);

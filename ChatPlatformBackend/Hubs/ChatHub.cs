@@ -1,10 +1,12 @@
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ChatPlatformBackend.Hubs;
 
+[Authorize]
 public class ChatHub : Hub
 {
     private readonly ChatAppContext _chatAppContext;
