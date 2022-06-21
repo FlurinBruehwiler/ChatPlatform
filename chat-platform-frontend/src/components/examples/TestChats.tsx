@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IChat from "../../models/IChat";
 import { login, register } from "../../services/apiService";
 import IApiError from "../../models/IApiError";
-import {SignalRService} from "../../services/signalRService";
+import { SignalRService } from "../../services/signalRService";
 
 function TestChats() {
-  const [ signalRService, setSignalRService ] = useState<SignalRService>(new SignalRService());
+  const [signalRService, setSignalRService] = useState<
+    SignalRService | undefined
+  >(undefined);
 
   const [chats, setChats] = useState<IChat[]>([]);
 
@@ -13,6 +15,11 @@ function TestChats() {
   const [password, setPassword] = useState<string>("");
 
   const [chatName, setChatName] = useState<string>("");
+
+  useEffect(() => {
+    console.log("ctor");
+    setSignalRService(new SignalRService());
+  }, []);
 
   const registerPress = async () => {
     await register(username, password, (error: IApiError) => {});
@@ -23,6 +30,7 @@ function TestChats() {
   };
 
   const createChatPress = async () => {
+    if (!signalRService) return;
     signalRService.createChat(chatName);
   };
 
@@ -66,10 +74,10 @@ function TestChats() {
       <div className={"w-full border-2 border-black"}></div>
       <div>
         <input
-            type="text"
-            onChange={chatNameChange}
-            value={chatName}
-            className={"border-black border-2"}
+          type="text"
+          onChange={chatNameChange}
+          value={chatName}
+          className={"border-black border-2"}
         />
         <button onClick={createChatPress}>Create Chat</button>
       </div>

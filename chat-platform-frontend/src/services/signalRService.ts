@@ -6,6 +6,7 @@ class SignalRService {
   private readonly connection: HubConnection;
 
   constructor() {
+    console.log("ahhh");
     this.connection = tryEstablishConnection();
     this.connection
       .start()

@@ -10,7 +10,7 @@ public class CorsServiceDefinition : IServiceDefinition
             {
                 policyBuilder
                     .WithOrigins("https://localhost:3000")
-                    .WithHeaders("Content-Type", "x-signalr-user-agent");
+                    .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
             });
         });
     }
