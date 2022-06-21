@@ -3,6 +3,7 @@ using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatPlatformBackend.Hubs;
 
@@ -58,5 +59,20 @@ public class ChatHub : Hub
         var user = await _userService.GetUserByUsernameAsync(username);
         chat.Users.Remove(user);
         await _chatAppContext.SaveChangesAsync();
+    }
+
+    public async Task<List<DtoChat>> GetChats()
+    {
+        var user = _userService.GetUserByContextWithChats(Context);
+
+        var chats = await _chatAppContext.Chats
+            .Include(x => x.Users)
+            .Where(chat => chat.Users.Any(x => x.Username == user.Username)).ToListAsync();
+
+        return chats.Select(x => new DtoChat(
+            x.Users.Select( u => u.Username).ToList(), 
+            x.Messages.Select(m => new DtoMessage(m.Content, m.User.Username, m.ChatId)).ToList(), 
+            x.Name, 
+            x.ChatId)).ToList();
     }
 }

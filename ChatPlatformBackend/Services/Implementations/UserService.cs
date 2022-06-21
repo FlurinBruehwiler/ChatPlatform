@@ -24,7 +24,7 @@ public class UserService : IUserService
         if (context.User?.Identity is null)
             throw new BadRequestException(Errors.NoAuth);
         
-        var user = _chatAppContext.Users.Where(x => x.Username == context.User.Identity.Name)
+        var user = _chatAppContext.Users.Where(x => x.Username == context.UserIdentifier)
             .Include(x => x.Chats).FirstOrDefault();
 
         if (user is null)
@@ -38,9 +38,7 @@ public class UserService : IUserService
         if(context.User?.Identity is null)
             throw new BadRequestException(Errors.NoAuth);
         
-        var identity = (ClaimsIdentity)context.User.Identity;
-        var name = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == name); 
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == context.UserIdentifier); 
         
         if(user is null)
             throw new BadRequestException(Errors.UserNotFound);

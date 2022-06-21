@@ -7,4 +7,6 @@ public class Chat
     public string Name { get; set; } = null!;
 
     public List<User> Users { get; set; } = null!;
+
+    public List<Message> Messages { get; set; } = null!;
 }
