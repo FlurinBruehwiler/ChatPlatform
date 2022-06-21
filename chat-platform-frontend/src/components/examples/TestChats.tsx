@@ -32,6 +32,7 @@ function TestChats() {
   const createChatPress = async () => {
     if (!signalRService) return;
     signalRService.createChat(chatName);
+
   };
 
   const usernameChange = (e: React.FormEvent<HTMLInputElement>) => {
