@@ -54,7 +54,7 @@ public class AuthService : IAuthService
 
     public void AppendAccessToken(HttpResponse httpResponse, User user)
     {
-        httpResponse.Cookies.Append("X-Access-Token2", CreateToken(user), new CookieOptions
+        httpResponse.Cookies.Append(_configuration.GetSection("CookieName").Value, CreateToken(user), new CookieOptions
         {
             SameSite = SameSiteMode.Strict,
             Secure = false,

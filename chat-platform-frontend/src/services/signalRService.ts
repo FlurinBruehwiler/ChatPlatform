@@ -1,25 +1,38 @@
 import IMessage from "../models/IMessage";
 import { HubConnection } from "@microsoft/signalr";
 import { tryEstablishConnection } from "./apiService";
+import IsLoggedIn from "./UserService";
 
 class SignalRService {
-  private readonly connection: HubConnection;
+  private connection: HubConnection | undefined;
 
   constructor() {
-    console.log("ahhh");
-    this.connection = tryEstablishConnection();
-    this.connection
-      .start()
-      .then(() => {})
-      .catch((e: any) => console.log("Connection failed: ", e));
+    this.connect();
   }
 
-  createChat = (name: string) => {
-    if (!this.connection) return;
+  connect = () => {
+    if(!IsLoggedIn())
+      return;
 
-    this.connection.invoke("CreateChat", name).catch((err: any) => {
+    this.connection = tryEstablishConnection();
+    this.connection
+        .start()
+        .then(() => {})
+        .catch((e: any) => console.log("Connection failed: ", e));
+  }
+
+  createChat = async (name: string) : Promise<number> => {
+    if (!this.connection) return -1;
+
+    await this.connection.invoke<number>("CreateChat", name).catch((err: any) => {
       console.log(JSON.stringify(err));
+      return -1;
+    }).then((result) => {
+      if(result)
+        return result;
     });
+
+    return -1;
   };
 
   addUserToChat = (chatId: number, username: string) => {
@@ -41,6 +54,8 @@ class SignalRService {
   };
 
   ReceiveMessage = () => {
+    if (!this.connection) return;
+
     this.connection.on("ReceiveMessage", (message: IMessage) => {
       console.log(JSON.stringify(message));
       return message;

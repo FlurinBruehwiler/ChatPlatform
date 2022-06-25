@@ -3,6 +3,7 @@ import IChat from "../../models/IChat";
 import { login, register } from "../../services/apiService";
 import IApiError from "../../models/IApiError";
 import { SignalRService } from "../../services/signalRService";
+import {sign} from "crypto";
 
 function TestChats() {
   const [signalRService, setSignalRService] = useState<
@@ -17,7 +18,6 @@ function TestChats() {
   const [chatName, setChatName] = useState<string>("");
 
   useEffect(() => {
-    console.log("ctor");
     setSignalRService(new SignalRService());
   }, []);
 
@@ -27,12 +27,12 @@ function TestChats() {
 
   const loginPress = async () => {
     await login(username, password, (error: IApiError) => {});
+    signalRService?.connect();
   };
 
   const createChatPress = async () => {
     if (!signalRService) return;
     signalRService.createChat(chatName);
-
   };
 
   const usernameChange = (e: React.FormEvent<HTMLInputElement>) => {

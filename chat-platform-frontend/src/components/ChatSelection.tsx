@@ -17,8 +17,7 @@ function ChatSelection() {
   }, []);
   const createChatPress = async () => {
     if (!signalRService) return;
-    signalRService.createChat(chatName);
-
+    await signalRService.createChat(chatName);
   };
 
   const addUsertoChat = async () => {
