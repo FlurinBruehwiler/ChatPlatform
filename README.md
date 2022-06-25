@@ -39,6 +39,9 @@ appsettings.Development.json in ./ChatPlatformBackend
 ### HTTPS
 
 .env in ./chat-platform-frontend
+
+```
 HTTPS=true
 SSL_CRT_FILE=PATH_TO_CERT.PEM
 SSL_KEY_FILE=PATH_TO_KEY.PEM
+```
