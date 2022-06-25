@@ -17,6 +17,7 @@ appsettings.json in ./ChatPlatformBackend
     }
   },
   "AllowedHosts": "*"
+  "CookieName" : "X-Access-Token"
 }
 ```
 
@@ -34,3 +35,10 @@ appsettings.Development.json in ./ChatPlatformBackend
   "JwtSecret": "32_CHARACTERS"
 }
 ```
+
+### HTTPS
+
+.env in ./chat-platform-frontend
+HTTPS=true
+SSL_CRT_FILE=PATH_TO_CERT.PEM
+SSL_KEY_FILE=PATH_TO_KEY.PEM
