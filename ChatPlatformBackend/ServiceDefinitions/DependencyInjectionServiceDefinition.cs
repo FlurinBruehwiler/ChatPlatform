@@ -1,4 +1,5 @@
-﻿using ChatPlatformBackend.Services.Implementations;
+﻿using ChatPlatformBackend.Factories;
+using ChatPlatformBackend.Services.Implementations;
 using ChatPlatformBackend.Services.Interfaces;
 
 namespace ChatPlatformBackend.ServiceDefinitions;
@@ -11,5 +12,6 @@ public class DependencyInjectionServiceDefinition : IServiceDefinition
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IChatService, ChatService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
+        builder.Services.AddScoped<IDtoFactory, DtoFactory>();
     }
 }

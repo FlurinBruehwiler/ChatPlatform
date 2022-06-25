@@ -2,37 +2,25 @@ import IMessage from "../models/IMessage";
 import { HubConnection } from "@microsoft/signalr";
 import { tryEstablishConnection } from "./apiService";
 import IsLoggedIn from "./UserService";
+import IChat from "../models/IChat";
 
 class SignalRService {
   private connection: HubConnection | undefined;
 
-  constructor() {
-    this.connect();
-  }
-
-  connect = () => {
+  connect = async () => {
     if(!IsLoggedIn())
       return;
 
     this.connection = tryEstablishConnection();
-    this.connection
-        .start()
-        .then(() => {})
-        .catch((e: any) => console.log("Connection failed: ", e));
+    await this.connection.start();
   }
 
-  createChat = async (name: string) : Promise<number> => {
-    if (!this.connection) return -1;
+  createChat = async (name: string) : Promise<IChat> => {
+    if (!this.connection) throw "Connection does not exist";
 
-    await this.connection.invoke<number>("CreateChat", name).catch((err: any) => {
-      console.log(JSON.stringify(err));
-      return -1;
-    }).then((result) => {
-      if(result)
-        return result;
-    });
+    const chatId = await this.connection.invoke<number>("CreateChat", name)
 
-    return -1;
+    return { name: name, chatdId: chatId, messages: [] as IMessage[], usernames: [""] } as IChat;
   };
 
   addUserToChat = (chatId: number, username: string) => {
@@ -52,6 +40,14 @@ class SignalRService {
       .invoke("RemoveUserFromChat", chatId, username)
       .catch((error: any) => console.log(error));
   };
+
+  getChats = async () : Promise<IChat[]> => {
+    if (!this.connection) throw "Connection does not exist";
+
+    const chats = await this.connection.invoke<IChat[]>("GetChats")
+    console.log(JSON.stringify(chats));
+    return chats;
+  }
 
   ReceiveMessage = () => {
     if (!this.connection) return;

@@ -4,6 +4,7 @@ import { login, register } from "../../services/apiService";
 import IApiError from "../../models/IApiError";
 import { SignalRService } from "../../services/signalRService";
 import {sign} from "crypto";
+import TestChat from "./TestChat";
 
 function TestChats() {
   const [signalRService, setSignalRService] = useState<
@@ -11,6 +12,7 @@ function TestChats() {
   >(undefined);
 
   const [chats, setChats] = useState<IChat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<string>();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -19,7 +21,16 @@ function TestChats() {
 
   useEffect(() => {
     setSignalRService(new SignalRService());
+    connect().then();
   }, []);
+
+  const connect = async () => {
+    await signalRService?.connect();
+    let newChats = await signalRService?.getChats();
+    if(newChats == undefined)
+      return;
+    setChats(newChats);
+  }
 
   const registerPress = async () => {
     await register(username, password, (error: IApiError) => {});
@@ -27,12 +38,13 @@ function TestChats() {
 
   const loginPress = async () => {
     await login(username, password, (error: IApiError) => {});
-    signalRService?.connect();
+    await connect();
   };
 
   const createChatPress = async () => {
     if (!signalRService) return;
-    signalRService.createChat(chatName);
+    let newChat = await signalRService.createChat(chatName);
+    setChats(oldChats => [...oldChats, newChat]);
   };
 
   const usernameChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -73,6 +85,7 @@ function TestChats() {
         <button onClick={loginPress}>Login</button>
       </div>
       <div className={"w-full border-2 border-black"}></div>
+      <button onClick={connect}>Connect</button>
       <div>
         <input
           type="text"
@@ -82,6 +95,16 @@ function TestChats() {
         />
         <button onClick={createChatPress}>Create Chat</button>
       </div>
+      <div className={"w-full border-2 border-black"}></div>
+      <select name="chats" id="chats" className={"w-32"} value={selectedChat}>
+        {
+          chats.map((chat) => {
+            console.log(JSON.stringify(chat));
+            return <option key={chat.chatdId} value={chat.chatdId}>{chat.name}</option>
+          }
+        )}
+      </select>
+      <TestChat chat={chats[0]}></TestChat>
     </div>
   );
 }

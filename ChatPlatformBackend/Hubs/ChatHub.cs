@@ -1,4 +1,5 @@
 using ChatPlatformBackend.DtoModels;
+using ChatPlatformBackend.Factories;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -14,13 +15,15 @@ public class ChatHub : Hub
     private readonly IChatService _chatService;
     private readonly IMessageService _messageService;
     private readonly IUserService _userService;
+    private readonly IDtoFactory _dtoFactory;
 
-    public ChatHub(ChatAppContext chatAppContext, IChatService chatService, IMessageService messageService, IUserService userService)
+    public ChatHub(ChatAppContext chatAppContext, IChatService chatService, IMessageService messageService, IUserService userService, IDtoFactory dtoFactory)
     {
         _chatAppContext = chatAppContext;
         _chatService = chatService;
         _messageService = messageService;
         _userService = userService;
+        _dtoFactory = dtoFactory;
     }
     
     public async Task SendMessage(int chatId, string messageContent)
@@ -67,12 +70,11 @@ public class ChatHub : Hub
 
         var chats = await _chatAppContext.Chats
             .Include(x => x.Users)
+            .Include(x => x.Messages)
             .Where(chat => chat.Users.Any(x => x.Username == user.Username)).ToListAsync();
 
-        return chats.Select(x => new DtoChat(
-            x.Users.Select( u => u.Username).ToList(), 
-            x.Messages.Select(m => new DtoMessage(m.Content, m.User.Username, m.ChatId)).ToList(), 
-            x.Name, 
-            x.ChatId)).ToList();
+        var dtoChats = chats.Select(x => _dtoFactory.CreateDtoChat(x)).ToList();
+
+        return dtoChats;
     }
 }

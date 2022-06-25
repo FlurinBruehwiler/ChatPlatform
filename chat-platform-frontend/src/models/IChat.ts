@@ -1,4 +1,8 @@
+import IMessage from "./IMessage";
+
 export default interface IChat {
   name: string;
-  id: number;
+  chatdId: number;
+  messages: IMessage[];
+  usernames: string[];
 }
