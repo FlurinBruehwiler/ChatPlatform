@@ -3,9 +3,11 @@ import {HubConnection} from "@microsoft/signalr";
 import {tryEstablishConnection} from "./apiService";
 import IsLoggedIn from "./userService";
 import IChat from "../models/IChat";
+import chat from "../components/Chat";
 
 class SignalRService {
     private connection: HubConnection | undefined;
+    public receivedMessage: ((message: IMessage) => void) | undefined;
 
     connect = async () => {
         if (!IsLoggedIn())
@@ -13,7 +15,17 @@ class SignalRService {
 
         this.connection = tryEstablishConnection();
         await this.connection.start();
+        this.connection.on("ReceiveMessage", (message: IMessage) => {
+            if (this.receivedMessage)
+                this.receivedMessage(message);
+        });
     }
+
+    sendMessage = async (chatId: number, messageContent: string) => {
+        console.log(chatId);
+        if (!this.connection) throw "Connection does not exist";
+        await this.connection.invoke("SendMessage", chatId, messageContent)
+    };
 
     createChat = async (name: string): Promise<IChat> => {
         if (!this.connection) throw "Connection does not exist";
@@ -47,15 +59,6 @@ class SignalRService {
         const chats = await this.connection.invoke<IChat[]>("GetChats")
         return chats;
     }
-
-    ReceiveMessage = () => {
-        if (!this.connection) return;
-
-        this.connection.on("ReceiveMessage", (message: IMessage) => {
-            console.log(JSON.stringify(message));
-            return message;
-        });
-    };
 }
 
 export {SignalRService};

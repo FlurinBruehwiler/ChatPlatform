@@ -29,10 +29,10 @@ public class ChatHub : Hub
     public async Task SendMessage(int chatId, string messageContent)
     {
         var message = await _messageService.CreateMessageAsync(Context, chatId, messageContent);
-        var dtoMessage = new DtoMessage(message.Content, message.User.Username, message.UserId);
-        await _chatService.SendMessage(Clients, chatId, dtoMessage);
         _chatAppContext.Messages.Add(message);
         await _chatAppContext.SaveChangesAsync();
+        var dtoMessage = new DtoMessage(message.Content, message.User.Username, chatId, message.MessageId);
+        await _chatService.SendMessage(Clients, chatId, dtoMessage);
     }
 
     public async Task<int> CreateChat(string name)

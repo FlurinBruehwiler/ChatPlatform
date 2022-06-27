@@ -16,6 +16,6 @@ public class DtoFactory : IDtoFactory
 
     public DtoMessage CreateDtoMessage(Message message)
     {
-        return new DtoMessage(message.Content, message.User.Username, message.ChatId);
+        return new DtoMessage(message.Content, message.User.Username, message.ChatId, message.MessageId);
     }
 }

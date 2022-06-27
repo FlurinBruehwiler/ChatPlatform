@@ -6,9 +6,9 @@ interface MessageProps {
 
 function Message(props: MessageProps) {
     return (
-        <li>
+        <li className={"bg-amber-200 mb-2 rounded-md w-[300px] p-3"}>
             <div>
-                <span>10:10 AM, Today</span> &nbsp; &nbsp;
+                <span>{props.Message.messageId}</span> &nbsp; &nbsp;
                 <span>{props.Message.username}</span>
                 <i></i>
             </div>

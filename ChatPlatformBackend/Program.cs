@@ -1,10 +1,15 @@
 using ChatPlatformBackend;
 using ChatPlatformBackend.Extensions;
+using ChatPlatformBackend.Filters;
 using ChatPlatformBackend.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.AddFilter<GroupFilter>();
+});
 
 builder.AddServices();
 

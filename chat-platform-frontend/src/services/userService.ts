@@ -1,4 +1,4 @@
-function IsLoggedIn() : boolean{
+function IsLoggedIn(): boolean {
     let authCookie = getCookie("X-Access-Token");
 
     return authCookie != null;
@@ -9,15 +9,13 @@ function getCookie(name: string) {
     const dc = document.cookie;
     const prefix = name + "=";
     let begin = dc.indexOf("; " + prefix);
-    if (begin == -1) {
+    if (begin === -1) {
         begin = dc.indexOf(prefix);
-        if (begin != 0) return null;
-    }
-    else
-    {
+        if (begin !== 0) return null;
+    } else {
         begin += 2;
         end = document.cookie.indexOf(";", begin);
-        if (end == -1) {
+        if (end === -1) {
             end = dc.length;
         }
     }
