@@ -1,16 +1,19 @@
-import TestChats from "./examples/TestChats";
-import { useEffect } from "react";
-import TestChat from "./examples/TestChat";
-import LoginRegister from "./LoginRegister";
-import Chat from "./Chat";
 import ChatSelection from "./ChatSelection";
+import React, {useState} from "react";
+import IsLoggedIn from "../services/userService";
+import AuthModal from "./AuthModal";
 
 function App() {
-  return (
-    <div className={"grid grid-cols-main h-full"}>
-        <TestChats></TestChats>
-    </div>
-  );
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(IsLoggedIn());
+
+    if (isLoggedIn) {
+        return (
+            <ChatSelection Logout={() => setIsLoggedIn(false)}/>
+        );
+    } else {
+        return <AuthModal CloseCallback={() => setIsLoggedIn(true)}/>
+    }
+
 }
 
 export default App;

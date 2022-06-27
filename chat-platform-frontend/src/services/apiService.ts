@@ -6,31 +6,27 @@ import IApiError from "../models/IApiError";
 let login = async (
   username: string,
   password: string,
-  callback: (result: IApiError) => void
 ) => {
-  await axios
-    .post("/login", {
-      username: username,
-      password: password,
-    } as IDtoUser)
-    .catch((error) => {
-      callback(error as IApiError);
-    });
+    try {
+        await axios
+            .post("/login", {
+                username: username,
+                password: password,
+            } as IDtoUser)
+    }catch(err){
+        throw "Login failed";
+    }
 };
 
 let register = async (
   username: string,
   password: string,
-  callback: (result: IApiError) => void
 ) => {
   await axios
     .post("/register", {
       username: username,
       password: password,
-    } as IDtoUser)
-    .catch((error) => {
-      callback(error as IApiError);
-    });
+    } as IDtoUser);
 };
 
 const tryEstablishConnection = () => {

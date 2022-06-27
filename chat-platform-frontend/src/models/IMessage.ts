@@ -1,5 +1,6 @@
 export default interface IMessage {
-  messageContent: string;
-  username: string;
-  chatId: number;
+    messageContent: string;
+    username: string;
+    chatId: number;
+    messageId: number;
 }

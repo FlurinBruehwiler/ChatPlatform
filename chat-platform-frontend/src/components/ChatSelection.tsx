@@ -1,46 +1,74 @@
-import ChatSelectionItem from "./ChatSelectionItem";
 import React, {useEffect, useState} from "react";
 import IChat from "../models/IChat";
 import {SignalRService} from "../services/signalRService";
+import ChatSelectionItem from "./ChatSelectionItem";
+import CreateChatModal from "./CreateChatModal";
+import Chat from "./Chat";
 
-function ChatSelection() {
-  const [signalRService, setSignalRService] = useState<
-      SignalRService | undefined
-      >(undefined);
+interface ChatSelectionProps {
+    Logout: () => void;
+}
 
-  const [chats, setChats] = useState<IChat[]>([]);
-  const [chatName, setChatName] = useState<string>("");
+function ChatSelection(props: ChatSelectionProps) {
+    const [signalRService, setSignalRService] = useState<SignalRService>(new SignalRService());
 
-  useEffect(() => {
-    console.log("ctor");
-    setSignalRService(new SignalRService());
-  }, []);
-  const createChatPress = async () => {
-    if (!signalRService) return;
-    await signalRService.createChat(chatName);
-  };
+    const [chats, setChats] = useState<IChat[]>([]);
+    const [chatName, setChatName] = useState<string>("");
 
-  const addUsertoChat = async () => {
+    const [showingCreateChatModal, setShowingCreateChatModal] = useState<boolean>(false);
 
-  }
+    const [selectedChat, setSelectedChat] = useState<IChat | undefined>();
 
-  const chatNameChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setChatName(e.currentTarget.value);
-  };
-  return (
-    <div className={"bg-gray-500 w-full overflow-auto h-full"}>
-      <ul className={"overflow-auto p-3 h-full"}>
-        <input
-            type="text"
-            onChange={chatNameChange}
-            value={chatName}
-            className={"border-black border-2"}
-        />
-        <button onClick={createChatPress}>Create Chat</button>
-        <button onClick={addUsertoChat}>Add User</button>
-      </ul>
-    </div>
-  );
+    useEffect(() => {
+        connect().then();
+    }, []);
+
+    const connect = async () => {
+        await signalRService?.connect();
+        let newChats: IChat[] = await signalRService?.getChats();
+        if (newChats == undefined)
+            return;
+        setChats(newChats);
+        if (newChats.length > 0)
+            setSelectedChat(newChats[0]);
+    }
+
+    return (
+        <div className={"bg-white w-full h-full flex"}>
+            <div className={"w-[600px] p-10 overflow-auto"}>
+                <div className={"mb-5"}>
+                    <div className={"flex gap-x-2"}>
+                        <button onClick={props.Logout} type="button"
+                                className="w-full px-8 py-3 text-blue-100 bg-blue-600 rounded-md">
+                            Log out
+                        </button>
+                        <button onClick={signalRService?.connect} type="button"
+                                className="w-full px-8 py-3 text-blue-100 bg-blue-600 rounded-md">
+                            Connect
+                        </button>
+                        <button onClick={() => setShowingCreateChatModal(true)} type="button"
+                                className="w-full px-8 py-3 text-blue-100 bg-blue-600 rounded-md">
+                            Create Chat
+                        </button>
+                        {
+                            showingCreateChatModal ?
+                                <CreateChatModal CloseCallback={() => setShowingCreateChatModal(false)}
+                                                 SignalRService={signalRService}
+                                                 CreateChatCallback={(newChat) => setChats(oldChats => [...oldChats, newChat])}/> : null
+                        }
+                    </div>
+                </div>
+                <ul className={"overflow-auto"}>
+                    {
+                        chats.map((chat) => <ChatSelectionItem Chat={chat} key={chat.chatId}
+                                                               ClickCallback={() => setSelectedChat(chat)}
+                                                               IsSelectedChat={selectedChat === chat}/>)
+                    }
+                </ul>
+            </div>
+            {selectedChat ? <Chat Chat={selectedChat}/> : null}
+        </div>
+    );
 }
 
 export default ChatSelection;
