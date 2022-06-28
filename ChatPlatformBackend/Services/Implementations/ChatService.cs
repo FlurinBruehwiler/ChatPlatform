@@ -34,8 +34,13 @@ public class ChatService : IChatService
         return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
     }
 
-    public Task AddUserToGroup(IGroupManager groups, HubCallerContext context, Chat chat)
+    public Task AddConnectionsToGroup(IHubCallerClients clients, Chat chat)
     {
-        return groups.AddToGroupAsync(context.ConnectionId, GetUniqueChatName(chat.ChatId));
+        foreach (var user in chat.Users)
+        {
+            return clients.Groups(user.Username).SendAsync("AddToGroup", chat.ChatId);
+        }
+
+        return Task.CompletedTask;
     }
 }

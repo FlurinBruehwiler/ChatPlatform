@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Exceptions;
 using ChatPlatformBackend.Models;
@@ -52,6 +51,11 @@ public class UserService : IUserService
         if(user is null)
             throw new BadRequestException(Errors.UserNotFound);
         return user;
+    }
+
+    public async Task<User?> TryGetUserByUsernameAsync(string username)
+    {
+        return await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
     }
 
     public async Task RegisterUser(DtoUser dtoUser, HttpResponse httpResponse)

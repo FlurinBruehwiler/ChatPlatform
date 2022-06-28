@@ -1,4 +1,5 @@
 using ChatPlatformBackend.DtoModels;
+using ChatPlatformBackend.Exceptions;
 using ChatPlatformBackend.Factories;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
@@ -35,16 +36,25 @@ public class ChatHub : Hub
         await _chatService.SendMessage(Clients, chatId, dtoMessage);
     }
 
-    public async Task<int> CreateChat(string name)
+    public async Task<int> CreateChat(string name, List<string> usernames)
     {
+        var users = new List<User> {await _userService.GetUserByContextAsync(Context)};        
+        foreach (var username in usernames)
+        {
+            var user = await _userService.TryGetUserByUsernameAsync(username);
+            if (user is null)
+                continue;
+            users.Add(user);
+        }
+
         var chat = new Chat
         {
             Name = name,
-            Users = new List<User>{await _userService.GetUserByContextAsync(Context)}
+            Users = users
         };
         _chatAppContext.Chats.Add(chat);
         await _chatAppContext.SaveChangesAsync();
-        await _chatService.AddUserToGroup(Groups, Context, chat);
+        await _chatService.AddConnectionsToGroup(Clients, chat);
         return chat.ChatId;
     }
 
@@ -76,5 +86,17 @@ public class ChatHub : Hub
         var dtoChats = chats.Select(x => _dtoFactory.CreateDtoChat(x)).ToList();
 
         return dtoChats;
+    }
+
+    public async Task AddConnectionToGroup(int chatId)
+    {
+        var user = _userService.GetUserByContextWithChats(Context);
+
+        var chat = user.Chats.FirstOrDefault(x => x.ChatId != chatId);
+        
+        if (chat is null)
+            throw new BadRequestException(Errors.UserNotInChat);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
     }
 }
