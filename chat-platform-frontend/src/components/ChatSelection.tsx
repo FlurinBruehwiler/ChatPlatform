@@ -16,7 +16,6 @@ function ChatSelection(props: ChatSelectionProps) {
   );
 
   const [chats, setChats] = useState<IChat[]>([]);
-  const [chatName, setChatName] = useState<string>("");
 
   const [showingCreateChatModal, setShowingCreateChatModal] =
     useState<boolean>(false);
@@ -36,7 +35,6 @@ function ChatSelection(props: ChatSelectionProps) {
   };
 
   signalRService.receivedMessage = (message: IMessage) => {
-    console.log(JSON.stringify(message));
     let newChats = [...chats];
     let matchingChats = newChats.filter((x) => x.chatId === message.chatId);
     if (matchingChats.length !== 1) {
@@ -45,6 +43,11 @@ function ChatSelection(props: ChatSelectionProps) {
     }
     matchingChats[0].messages.push(message);
     setChats(newChats);
+  };
+
+  signalRService.joinChat = async (chat: IChat) => {
+    setChats((oldChats) => [...oldChats, chat]);
+    await signalRService.addConnectionToGroup(chat.chatId);
   };
 
   return (
@@ -70,9 +73,6 @@ function ChatSelection(props: ChatSelectionProps) {
               <CreateChatModal
                 CloseCallback={() => setShowingCreateChatModal(false)}
                 SignalRService={signalRService}
-                CreateChatCallback={(newChat) =>
-                  setChats((oldChats) => [...oldChats, newChat])
-                }
               />
             ) : null}
           </div>
@@ -84,6 +84,13 @@ function ChatSelection(props: ChatSelectionProps) {
               key={chat.chatId}
               ClickCallback={() => setSelectedChat(chat)}
               IsSelectedChat={selectedChat === chat}
+              LeaveCallback={() => {
+                setChats((oldChats) => {
+                  signalRService.leaveChat(chat.chatId);
+                  oldChats.splice(chats.indexOf(chat), 1);
+                  return [...oldChats];
+                });
+              }}
             />
           ))}
         </ul>

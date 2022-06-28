@@ -1,7 +1,6 @@
 import axios from "../axios";
 import IDtoUser from "../models/IDtoUser";
 import { HubConnectionBuilder } from "@microsoft/signalr";
-import IApiError from "../models/IApiError";
 
 let login = async (username: string, password: string) => {
   try {

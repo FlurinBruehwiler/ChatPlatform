@@ -1,5 +1,6 @@
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformBackend.Exceptions;
+using ChatPlatformBackend.Factories;
 using ChatPlatformBackend.Models;
 using ChatPlatformBackend.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
@@ -10,10 +11,12 @@ namespace ChatPlatformBackend.Services.Implementations;
 public class ChatService : IChatService
 {
     private readonly ChatAppContext _chatAppContext;
+    private readonly IDtoFactory _dtoFactory;
 
-    public ChatService(ChatAppContext chatAppContext)
+    public ChatService(ChatAppContext chatAppContext, IDtoFactory dtoFactory)
     {
         _chatAppContext = chatAppContext;
+        _dtoFactory = dtoFactory;
     }
     
     public string GetUniqueChatName(int groupId)
@@ -34,13 +37,11 @@ public class ChatService : IChatService
         return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
     }
 
-    public Task AddConnectionsToGroup(IHubCallerClients clients, Chat chat)
+    public async Task AddUsersToChat(IHubCallerClients clients, Chat chat)
     {
         foreach (var user in chat.Users)
         {
-            return clients.Groups(user.Username).SendAsync("AddToGroup", chat.ChatId);
+            await clients.Groups(user.Username).SendAsync("JoinChat", _dtoFactory.CreateDtoChat(chat));
         }
-
-        return Task.CompletedTask;
     }
 }

@@ -1,9 +1,11 @@
 import IChat from "../models/IChat";
+import React from "react";
 
 interface ChatSelectionItemProps {
   Chat: IChat;
   ClickCallback: () => void;
   IsSelectedChat: boolean;
+  LeaveCallback: () => void;
 }
 
 function ChatSelectionItem(props: ChatSelectionItemProps) {
@@ -22,6 +24,13 @@ function ChatSelectionItem(props: ChatSelectionItemProps) {
       <div className={"w-full ml-4"}>
         <p className={"text-xl"}>{props.Chat.name}</p>
       </div>
+      <button
+        onClick={props.LeaveCallback}
+        type="button"
+        className="text-blue-100 bg-red-600 rounded-md text-sm p-2"
+      >
+        Leave
+      </button>
     </li>
   );
 }

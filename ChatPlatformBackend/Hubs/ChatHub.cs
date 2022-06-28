@@ -36,7 +36,7 @@ public class ChatHub : Hub
         await _chatService.SendMessage(Clients, chatId, dtoMessage);
     }
 
-    public async Task<int> CreateChat(string name, List<string> usernames)
+    public async Task CreateChat(string name, List<string> usernames)
     {
         var users = new List<User> {await _userService.GetUserByContextAsync(Context)};        
         foreach (var username in usernames)
@@ -50,12 +50,12 @@ public class ChatHub : Hub
         var chat = new Chat
         {
             Name = name,
-            Users = users
+            Users = users,
+            Messages = new List<Message>()
         };
         _chatAppContext.Chats.Add(chat);
         await _chatAppContext.SaveChangesAsync();
-        await _chatService.AddConnectionsToGroup(Clients, chat);
-        return chat.ChatId;
+        await _chatService.AddUsersToChat(Clients, chat);
     }
 
     public async Task AddUserToChat(int chatId, string username)
@@ -92,11 +92,26 @@ public class ChatHub : Hub
     {
         var user = _userService.GetUserByContextWithChats(Context);
 
-        var chat = user.Chats.FirstOrDefault(x => x.ChatId != chatId);
+        var chat = user.Chats.FirstOrDefault(x => x.ChatId == chatId);
         
         if (chat is null)
             throw new BadRequestException(Errors.UserNotInChat);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
+    }
+
+    public async Task LeaveChat(int chatId)
+    {
+        var user = _userService.GetUserByContextWithChats(Context);
+
+        var chat = user.Chats.FirstOrDefault(x => x.ChatId == chatId);
+        
+        if (chat is null)
+            throw new BadRequestException(Errors.UserNotInChat);
+        
+        user.Chats.Remove(chat);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
+        
+        await _chatAppContext.SaveChangesAsync();
     }
 }
