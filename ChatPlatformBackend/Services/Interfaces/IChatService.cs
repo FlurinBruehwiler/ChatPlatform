@@ -9,4 +9,5 @@ public interface IChatService
     public string GetUniqueChatName(int groupId);
     public Task<Chat> GetChatByIdAsync(int chatId);
     public Task SendMessage(IHubCallerClients clients ,int chatId, DtoMessage message);
+    public Task AddUserToGroup(IGroupManager groups, HubCallerContext context, Chat chat);
 }

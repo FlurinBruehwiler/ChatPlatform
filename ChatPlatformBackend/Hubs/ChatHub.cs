@@ -42,9 +42,9 @@ public class ChatHub : Hub
             Name = name,
             Users = new List<User>{await _userService.GetUserByContextAsync(Context)}
         };
-
         _chatAppContext.Chats.Add(chat);
         await _chatAppContext.SaveChangesAsync();
+        await _chatService.AddUserToGroup(Groups, Context, chat);
         return chat.ChatId;
     }
 
