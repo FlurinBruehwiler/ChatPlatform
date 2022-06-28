@@ -27,13 +27,14 @@ class SignalRService {
         await this.connection.invoke("SendMessage", chatId, messageContent)
     };
 
-    createChat = async (name: string): Promise<IChat> => {
+    createChat = async (name: string, users: string[]): Promise<IChat> => {
         if (!this.connection) throw "Connection does not exist";
 
-        const chatId = await this.connection.invoke<number>("CreateChat", name)
+        const chatId = await this.connection.invoke<number>("CreateChat", name, users )
 
         return {name: name, chatId: chatId, messages: [] as IMessage[], usernames: [""]} as IChat;
     };
+
 
     addUserToChat = (chatId: number, username: string) => {
         if (!this.connection) return;
