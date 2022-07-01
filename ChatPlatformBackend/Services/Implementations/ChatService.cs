@@ -37,11 +37,9 @@ public class ChatService : IChatService
         return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
     }
 
-    public async Task AddUsersToChat(IHubCallerClients clients, Chat chat)
+    public async Task InviteUserToChat(IHubCallerClients clients, User user, Chat chat)
     {
-        foreach (var user in chat.Users)
-        {
-            await clients.Groups(user.Username).SendAsync("JoinChat", _dtoFactory.CreateDtoChat(chat));
-        }
+        await clients.Groups(user.Username)
+            .SendAsync("InviteChat", _dtoFactory.CreateDtoChat(chat));
     }
 }

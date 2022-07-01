@@ -50,30 +50,19 @@ public class ChatHub : Hub
         var chat = new Chat
         {
             Name = name,
-            Users = users,
+            Users = new List<User>(),
             Messages = new List<Message>()
         };
         _chatAppContext.Chats.Add(chat);
         await _chatAppContext.SaveChangesAsync();
-        await _chatService.AddUsersToChat(Clients, chat);
+        await _chatService.InviteUserToChat(Clients, users);
     }
 
-    public async Task AddUserToChat(int chatId, string username)
+    public async Task JoinChat(int chatId)
     {
-        var chat = await _chatService.GetChatByIdAsync(chatId);
-        var user = await _userService.GetUserByUsernameAsync(username);
-        chat.Users.Add(user);
-        await _chatAppContext.SaveChangesAsync();
+        
     }
-
-    public async Task RemoveUserFromChat(int chatId, string username)
-    {
-        var chat = await _chatService.GetChatByIdAsync(chatId);
-        var user = await _userService.GetUserByUsernameAsync(username);
-        chat.Users.Remove(user);
-        await _chatAppContext.SaveChangesAsync();
-    }
-
+    
     public async Task<List<DtoChat>> GetChats()
     {
         var user = _userService.GetUserByContextWithChats(Context);
@@ -87,19 +76,7 @@ public class ChatHub : Hub
 
         return dtoChats;
     }
-
-    public async Task AddConnectionToGroup(int chatId)
-    {
-        var user = _userService.GetUserByContextWithChats(Context);
-
-        var chat = user.Chats.FirstOrDefault(x => x.ChatId == chatId);
-        
-        if (chat is null)
-            throw new BadRequestException(Errors.UserNotInChat);
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
-    }
-
+    
     public async Task LeaveChat(int chatId)
     {
         var user = _userService.GetUserByContextWithChats(Context);
