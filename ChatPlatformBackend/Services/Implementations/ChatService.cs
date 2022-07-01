@@ -32,6 +32,17 @@ public class ChatService : IChatService
         return chat;
     }
 
+    public async Task<Chat> GetChatByIdWithAsocsAsync(int chatId)
+    {
+        var chat = await _chatAppContext.Chats.Where(x => x.ChatId == chatId)
+            .Include(x => x.Users)
+            .Include(x => x.Messages)
+            .FirstOrDefaultAsync();
+        if (chat is null)
+            throw new BadRequestException(Errors.ChatNotFound);
+        return chat;
+    }
+
     public Task SendMessage(IHubCallerClients clients, int chatId, DtoMessage message)
     {
         return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
@@ -39,7 +50,6 @@ public class ChatService : IChatService
 
     public async Task InviteUserToChat(IHubCallerClients clients, User user, Chat chat)
     {
-        await clients.Groups(user.Username)
-            .SendAsync("InviteChat", _dtoFactory.CreateDtoChat(chat));
+        await clients.Groups(user.Username).SendAsync("ReceiveInvite", chat.ChatId);
     }
 }

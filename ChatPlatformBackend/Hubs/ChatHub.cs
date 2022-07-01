@@ -50,19 +50,32 @@ public class ChatHub : Hub
         var chat = new Chat
         {
             Name = name,
-            Users = new List<User>(),
+            Users = users,
             Messages = new List<Message>()
         };
         _chatAppContext.Chats.Add(chat);
         await _chatAppContext.SaveChangesAsync();
-        await _chatService.InviteUserToChat(Clients, users);
+        foreach (var user in users)
+        {
+            await _chatService.InviteUserToChat(Clients, user, chat);
+        }
     }
 
-    public async Task JoinChat(int chatId)
+    public async Task<DtoChat> JoinChat(int chatId)
     {
+        var chat = await _chatService.GetChatByIdWithAsocsAsync(chatId);
+        var user = await _userService.GetUserByContextAsync(Context);
+
+        if (!chat.Users.Contains(user))
+            throw new BadRequestException(Errors.UserNotInChat);
         
+        await _chatAppContext.SaveChangesAsync();
+        
+        await Groups.AddToGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chatId));
+
+        return _dtoFactory.CreateDtoChat(chat);
     }
-    
+
     public async Task<List<DtoChat>> GetChats()
     {
         var user = _userService.GetUserByContextWithChats(Context);
@@ -86,9 +99,18 @@ public class ChatHub : Hub
         if (chat is null)
             throw new BadRequestException(Errors.UserNotInChat);
         
+        if(!user.Chats.Contains(chat))
+            throw new BadRequestException(Errors.UserNotInChat);
+        
         user.Chats.Remove(chat);
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chat.ChatId));
+
+        await Clients.Group(user.Username).SendAsync("ReceiveKick", chatId);
         
         await _chatAppContext.SaveChangesAsync();
+    }
+
+    public async Task KickChat(int chatId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chatId));
     }
 }

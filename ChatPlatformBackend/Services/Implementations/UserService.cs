@@ -60,6 +60,12 @@ public class UserService : IUserService
 
     public async Task RegisterUser(DtoUser dtoUser, HttpResponse httpResponse)
     {
+        if(string.IsNullOrWhiteSpace(dtoUser.Username))
+            throw new BadRequestException(Errors.UsernameEmpty);
+            
+        if(string.IsNullOrWhiteSpace(dtoUser.Password))
+            throw new BadRequestException(Errors.PasswordEmpty);
+        
         if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoUser.Username))
             throw new BadRequestException(Errors.UsernameAlreadyExists);
         

@@ -8,4 +8,6 @@ public static class Errors
     public static readonly Error NoAuth = new Error("NoAuth", "No authentication provided");
     public static readonly Error UserNotFound = new Error("UserNotFound", "No User with this username found");
     public static readonly Error UserNotInChat = new Error("UserNotInChat", "The User is not member of the chat");
+    public static readonly Error PasswordEmpty = new Error("PasswordEmpty", "Password cant be empty");
+    public static readonly Error UsernameEmpty = new Error("UsernameEmpty", "Username cant be empty");
 }
