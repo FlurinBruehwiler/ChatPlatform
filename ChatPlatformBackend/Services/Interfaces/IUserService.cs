@@ -10,6 +10,6 @@ public interface IUserService
     public Task<User> GetUserByContextAsync(HubCallerContext context);
     public Task<User> GetUserByUsernameAsync(string username);
     public Task<User?> TryGetUserByUsernameAsync(string username);
-    public Task RegisterUser(DtoUser dtoUser, HttpResponse httpResponse);
-    public Task LoginUser(DtoUser dtoUser, HttpResponse httpResponse);
+    public Task RegisterUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
+    public Task LoginUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
 }

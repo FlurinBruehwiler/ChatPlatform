@@ -1,3 +1,3 @@
-﻿namespace ChatPlatformBackend.DtoModels;
+namespace ChatPlatformBackend.DtoModels;
 
-public record DtoUser(string Username, string Password);
+public record DtoUser(string Username, string? PicturePath);

@@ -113,4 +113,10 @@ public class ChatHub : Hub
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, _chatService.GetUniqueChatName(chatId));
     }
+
+    public async Task<DtoUser> GetCurrentUser()
+    {
+        var user = await _userService.GetUserByContextAsync(Context);
+        return new DtoUser(user.Username, user.PicturePath);
+    }
 }

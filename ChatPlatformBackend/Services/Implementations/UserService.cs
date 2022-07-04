@@ -58,21 +58,21 @@ public class UserService : IUserService
         return await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
     }
 
-    public async Task RegisterUser(DtoUser dtoUser, HttpResponse httpResponse)
+    public async Task RegisterUser(DtoAuthUser dtoAuthUser, HttpResponse httpResponse)
     {
-        if(string.IsNullOrWhiteSpace(dtoUser.Username))
+        if(string.IsNullOrWhiteSpace(dtoAuthUser.Username))
             throw new BadRequestException(Errors.UsernameEmpty);
             
-        if(string.IsNullOrWhiteSpace(dtoUser.Password))
+        if(string.IsNullOrWhiteSpace(dtoAuthUser.Password))
             throw new BadRequestException(Errors.PasswordEmpty);
         
-        if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoUser.Username))
+        if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoAuthUser.Username))
             throw new BadRequestException(Errors.UsernameAlreadyExists);
         
-        _authService.CreatePasswordHash(dtoUser.Password, out var passwordHash, out var passwordSalt);
+        _authService.CreatePasswordHash(dtoAuthUser.Password, out var passwordHash, out var passwordSalt);
         var user = new User
         {
-            Username = dtoUser.Username,
+            Username = dtoAuthUser.Username,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt
         };
@@ -81,11 +81,11 @@ public class UserService : IUserService
         _authService.AppendAccessToken(httpResponse, user);
     }
 
-    public async Task LoginUser(DtoUser dtoUser, HttpResponse httpResponse)
+    public async Task LoginUser(DtoAuthUser dtoAuthUser, HttpResponse httpResponse)
     {
-        var user = await GetUserByUsernameAsync(dtoUser.Username);
+        var user = await GetUserByUsernameAsync(dtoAuthUser.Username);
 
-        if (!_authService.VerifyPasswordHash(dtoUser.Password, user.PasswordHash, user.PasswordSalt))
+        if (!_authService.VerifyPasswordHash(dtoAuthUser.Password, user.PasswordHash, user.PasswordSalt))
             throw new BadRequestException(Errors.WrongPassword);
     
         _authService.AppendAccessToken(httpResponse, user);

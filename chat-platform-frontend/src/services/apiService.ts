@@ -1,5 +1,5 @@
 import axios from "../axios";
-import IDtoUser from "../models/IDtoUser";
+import IAuthUser from "../models/IAuthUser";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
 let login = async (username: string, password: string) => {
@@ -7,7 +7,7 @@ let login = async (username: string, password: string) => {
     await axios.post("/login", {
       username: username,
       password: password,
-    } as IDtoUser);
+    } as IAuthUser);
   } catch (err) {
     throw JSON.stringify(err);
   }
@@ -18,7 +18,7 @@ let register = async (username: string, password: string) => {
     await axios.post("/register", {
       username: username,
       password: password,
-    } as IDtoUser);
+    } as IAuthUser);
   } catch (err) {
     throw JSON.stringify(err);
   }

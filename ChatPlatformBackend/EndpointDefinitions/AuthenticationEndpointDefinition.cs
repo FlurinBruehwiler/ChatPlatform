@@ -12,13 +12,13 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
         app.MapPost( "/login", Login);
     }
 
-    private async Task<IResult> Register(DtoUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
+    private async Task<IResult> Register(DtoAuthUser dtoAuthUser, [FromServices] IUserService userService, HttpResponse httpResponse)
     {
-        await userService.RegisterUser(dtoUser, httpResponse);
+        await userService.RegisterUser(dtoAuthUser, httpResponse);
         return Results.Ok();
     }
     
-    private async Task<IResult> Login(DtoUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
+    private async Task<IResult> Login(DtoAuthUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
     {
         await userService.LoginUser(dtoUser, httpResponse);
         return Results.Ok();
