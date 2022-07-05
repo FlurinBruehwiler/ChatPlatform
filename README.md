@@ -3,6 +3,7 @@
 ## Dokumentation
 
 [Projekt Planung](https://github.com/FlurinBruehwiler/ChatPlatform/blob/main/Dokumentation/ProjektPlanung.pdf)
+
 [Dokumentation](https://github.com/FlurinBruehwiler/ChatPlatform/blob/main/Dokumentation/Dokumentation.pdf)
 
 ## Development
