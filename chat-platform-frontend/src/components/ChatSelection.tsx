@@ -79,7 +79,7 @@ function ChatSelection(props: ChatSelectionProps) {
         <div className={"mb-5"}>
           <div className={"flex items-center mb-3 gap-x-2"}>
             <img
-              src={user?.picturePath}
+              src={"https://randomuser.me/api/portraits/women/40.jpg"}
               alt=""
               className={"h-14 w-14 rounded-full"}
             />
