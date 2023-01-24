@@ -1,7 +1,6 @@
 import IMessage from "../models/IMessage";
 import { HubConnection } from "@microsoft/signalr";
-import { tryEstablishConnection } from "./apiService";
-import IsLoggedIn from "./userService";
+import {checkIfLoggedIn, tryEstablishConnection} from "./apiService";
 import IChat from "../models/IChat";
 import IUser from "../models/IUser";
 
@@ -12,7 +11,7 @@ class SignalRService {
   public receiveKick: ((chatId: number) => void) | undefined;
 
   connect = async () => {
-    if (!IsLoggedIn()) return;
+    if (!await checkIfLoggedIn()) return;
 
     this.connection = tryEstablishConnection();
     await this.connection.start();

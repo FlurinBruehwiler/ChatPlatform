@@ -59,7 +59,7 @@ public class AuthService : IAuthService
             SameSite = SameSiteMode.Strict,
             Secure = false,
             Domain = null,
-            HttpOnly = false,
+            HttpOnly = true ,
             IsEssential = true,
         });
         httpResponse.Headers.AccessControlAllowCredentials = "true";

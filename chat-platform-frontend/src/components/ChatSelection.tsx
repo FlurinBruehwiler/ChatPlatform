@@ -8,7 +8,7 @@ import IMessage from "../models/IMessage";
 import IUser from "../models/IUser";
 
 interface ChatSelectionProps {
-  Logout: () => void;
+  Logout: () => Promise<void>;
 }
 
 function ChatSelection(props: ChatSelectionProps) {

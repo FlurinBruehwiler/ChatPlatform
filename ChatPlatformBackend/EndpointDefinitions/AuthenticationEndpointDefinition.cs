@@ -10,6 +10,8 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
     {
         app.MapPost( "/register", Register);
         app.MapPost( "/login", Login);
+        app.MapGet("/logout", Logout);
+        app.MapGet("/protected", ProtectedEndpoint).RequireAuthorization();
     }
 
     private async Task<IResult> Register(DtoAuthUser dtoAuthUser, [FromServices] IUserService userService, HttpResponse httpResponse)
@@ -21,6 +23,20 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
     private async Task<IResult> Login(DtoAuthUser dtoUser, [FromServices] IUserService userService, HttpResponse httpResponse)
     {
         await userService.LoginUser(dtoUser, httpResponse);
+        return Results.Ok();
+    }
+    
+    private IResult Logout(HttpContext context)
+    {
+        context.Response.Cookies.Append("X-Access-Token", "",  new CookieOptions
+        {
+            Expires = DateTime.UtcNow.AddDays(-1)
+        });
+        return Results.Ok();
+    }
+
+    private IResult ProtectedEndpoint()
+    {
         return Results.Ok();
     }
 }

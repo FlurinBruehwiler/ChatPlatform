@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { SignalRService } from "../services/signalRService";
-import IChat from "../models/IChat";
-import UserService from "../services/userService";
 
 interface CreateChatModalProps {
   CloseCallback: () => void;

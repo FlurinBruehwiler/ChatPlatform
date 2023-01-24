@@ -1,14 +1,21 @@
 import ChatSelection from "./ChatSelection";
-import React, {useState} from "react";
-import IsLoggedIn from "../services/userService";
+import React, {useEffect, useState} from "react";
 import AuthModal from "./AuthModal";
+import {checkIfLoggedIn, logout} from "../services/apiService";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(IsLoggedIn());
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+    useEffect(() => {
+        checkIfLoggedIn().then(x => setIsLoggedIn(x));
+    }, [])
 
     if (isLoggedIn) {
         return (
-            <ChatSelection Logout={() => setIsLoggedIn(false)}/>
+            <ChatSelection Logout={async () => {
+                await logout()
+                setIsLoggedIn(false);
+            }}/>
         );
     } else {
         return <AuthModal CloseCallback={() => setIsLoggedIn(true)}/>
