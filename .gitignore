@@ -456,3 +456,6 @@ $RECYCLE.BIN/
 
 appsettings*
 chat-platform-frontend/.env
+ChatPlatformBackend/MyDb.sqlite3-wal
+ChatPlatformBackend/MyDb.sqlite3
+ChatPlatformBackend/MyDb.sqlite3-shm
