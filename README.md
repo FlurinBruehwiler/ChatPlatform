@@ -1,11 +1,5 @@
 # ChatPlatform
 
-## Dokumentation
-
-[Projekt Planung](https://github.com/FlurinBruehwiler/ChatPlatform/blob/main/Dokumentation/ProjektPlanung.pdf)
-
-[Dokumentation](https://github.com/FlurinBruehwiler/ChatPlatform/blob/main/Dokumentation/Dokumentation.pdf)
-
 ## Development
 
 appsettings.json in ./ChatPlatformBackend
@@ -39,6 +33,7 @@ appsettings.Development.json in ./ChatPlatformBackend
 ```
 
 ### HTTPS
+https://www.youtube.com/watch?v=neT7fmZ6sDE&t
 
 .env in ./chat-platform-frontend
 
