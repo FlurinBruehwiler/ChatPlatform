@@ -48,7 +48,7 @@ public class ChatService : IChatService
         return clients.Groups(GetUniqueChatName(chatId)).SendAsync("ReceiveMessage", message);
     }
 
-    public async Task InviteUserToChat(IHubCallerClients clients, User user, Chat chat)
+    public async Task InviteUserToChatAsync(IHubCallerClients clients, User user, Chat chat)
     {
         await clients.Groups(user.Username).SendAsync("ReceiveInvite", chat.ChatId);
     }

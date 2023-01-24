@@ -57,7 +57,7 @@ public class ChatHub : Hub
         await _chatAppContext.SaveChangesAsync();
         foreach (var user in users)
         {
-            await _chatService.InviteUserToChat(Clients, user, chat);
+            await _chatService.InviteUserToChatAsync(Clients, user, chat);
         }
     }
 
@@ -118,5 +118,14 @@ public class ChatHub : Hub
     {
         var user = await _userService.GetUserByContextAsync(Context);
         return new DtoUser(user.Username, user.PicturePath);
+    }
+
+    public async Task AddUserToChat(int chatId, string username)
+    {
+        var chat = await _chatService.GetChatByIdWithAsocsAsync(chatId);
+        var user = await _userService.GetUserByUsernameAsync(username);
+        chat.Users.Add(user);
+        await _chatAppContext.SaveChangesAsync();
+        await _chatService.InviteUserToChatAsync(Clients, user, chat);
     }
 }

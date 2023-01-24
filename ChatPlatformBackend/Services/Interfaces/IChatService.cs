@@ -10,5 +10,5 @@ public interface IChatService
     public Task<Chat> GetChatByIdAsync(int chatId);
     public Task<Chat> GetChatByIdWithAsocsAsync(int chatId);
     public Task SendMessage(IHubCallerClients clients ,int chatId, DtoMessage message);
-    public Task InviteUserToChat(IHubCallerClients clients, User user, Chat chat);
+    public Task InviteUserToChatAsync(IHubCallerClients clients, User user, Chat chat);
 }

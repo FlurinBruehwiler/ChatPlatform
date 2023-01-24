@@ -12,6 +12,7 @@ interface ChatProps {
 
 function Chat(props: ChatProps) {
   const [messageContent, setMessageContent] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const sendMessage = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -20,17 +21,43 @@ function Chat(props: ChatProps) {
     await props.SignalRService.sendMessage(props.Chat.chatId, messageContent);
   };
 
+  const addUser = async () => {
+    if (username.trim().length === 0) return;
+    setUsername("");
+    await props.SignalRService.addUserToChat(props.Chat.chatId, username);
+  }
+
   return (
     <div
       className={"flex flex-col flex-grow-[1] justify-between h-full right-0"}
     >
-      <div className={"bg-blue-50 flex flex-row p-3 items-center"}>
-        <img
-          src="https://randomuser.me/api/portraits/women/40.jpg"
-          alt=""
-          className={"h-14 w-14 rounded-full"}
-        />
-        <div className={"text-2xl ml-4"}>{props.Chat.name}</div>
+      <div className={"bg-blue-50 flex flex-row p-3 items-center justify-between"}>
+        <div className={"flex items-center"}>
+          <img
+              src="https://randomuser.me/api/portraits/women/40.jpg"
+              alt=""
+              className={"h-14 w-14 rounded-full"}
+          />
+          <div className={"text-2xl ml-4"}>{props.Chat.name}</div>
+        </div>
+        <div className={"flex gap-3"}>
+          <input
+              onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                  setUsername(e.currentTarget.value)
+              }
+              value={username}
+              name="sendText"
+              placeholder="username"
+              className="px-3 py-3 text-blue-800 border border-blue-300 rounded-md bg-blue-50 focus:outline-none focus:ring-1 focus:ring-blue-300"
+          />
+          <button
+              onClick={addUser}
+              type="button"
+              className="px-8 py-3 text-blue-100 bg-blue-600 rounded-md"
+          >
+            Add User
+          </button>
+        </div>
       </div>
       <div className={"bg-white h-full overflow-auto"}>
         <ul className={"flex flex-col"}>
