@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "constants.jwt.claims",
+      "type": "java.lang.String",
+      "description": "The name for the claim."
+    },
+    {
+      "name": "constants.jwt.expiration",
+      "type": "java.util.Map",
+      "description": "The expiration dates for the tokens."
+    },
+    {
+      "name": "constants.jwt.secret",
+      "type": "java.lang.String",
+      "description": "The algorithms secret to encrypt the tokens."
+    },
+    {
+      "name": "constants.jwt.tokenprefix",
+      "type": "java.lang.String",
+      "description": "The prefix of the bearer token."
+    },
+    {
+      "name": "constants.jwt.claims.roles",
+      "type": "java.lang.String",
+      "description": "The claim for the roles."
+    },
+    {
+      "name": "constants.jwt.uriwhitelist",
+      "type": "java.util.List",
+      "description": "Whitelisted URIs for the api."
+    }
+  ]
+}
