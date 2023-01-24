@@ -49,7 +49,7 @@ public class UserService : IUserService
     {
         var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
         if(user is null)
-            throw new BadRequestException(Errors.UserNotFound);
+            throw new BadRequestException(Errors.WrongPassword);
         return user;
     }
 
