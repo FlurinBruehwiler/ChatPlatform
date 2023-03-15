@@ -10,8 +10,13 @@ public class SyncService
     
     public SyncService()
     {
+        var token =  Preferences.Default.Get(AuthPage.TokenKey, string.Empty);
+        
         _hubConnection  = new HubConnectionBuilder()
-            .WithUrl("http://localhost:53353/ChatHub")
+            .WithUrl($"{AuthPage.Url}/ChatHub", options =>
+            {
+                options.Headers.Add("Authorization", token);
+            })
             .Build();
     }
 

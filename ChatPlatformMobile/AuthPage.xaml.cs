@@ -7,7 +7,8 @@ namespace ChatPlatformMobile;
 public partial class AuthPage
 {
     private readonly AuthenticationType _authenticationType;
-    private const string TokenKey = "TokenKey";
+    public const string TokenKey = "TokenKey";
+    public const string Url = "https://localhost:7087";
     
     public AuthPage(AuthenticationType authenticationType)
     {
@@ -32,15 +33,19 @@ public partial class AuthPage
         };
         
         var client = new HttpClient();
-        var res = await client.PostAsJsonAsync($"https://localhost:7087/mobile{endpoint}", new DtoAuthUser(Username.Text, Password.Text));
+        var res = await client.PostAsJsonAsync($"{Url}/mobile{endpoint}", new DtoAuthUser(Username.Text, Password.Text));
 
         if(!res.IsSuccessStatusCode)
             return;
         
         var token = await res.Content.ReadAsStringAsync();
         
-        Preferences.Default.Set(TokenKey, token);
+        Preferences.Default.Set(TokenKey, token.Trim('"'));
+
+        var syncService = new SyncService();
+
+        await syncService.Start();
         
-        await Navigation.PushAsync(new ChatOverviewPage());
+        await Navigation.PushAsync(new ChatOverviewPage(syncService));
     }
 }

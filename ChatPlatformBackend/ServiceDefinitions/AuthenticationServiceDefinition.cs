@@ -22,7 +22,24 @@ public class AuthenticationServiceDefinition : IServiceDefinition
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies[builder.Configuration.GetSection("CookieName").Value];
+                        var cookieName = builder.Configuration.GetSection("CookieName").Value;
+
+                        if (cookieName is null)
+                            throw new Exception("Could not find 'CookieName' in configuration");
+
+                        if (context.Request.Cookies.TryGetValue(cookieName, out var cookieToken))
+                        {
+                            context.Token = cookieToken;
+                            return Task.CompletedTask;
+                        }
+
+                        if (context.Request.Headers.TryGetValue("Authorization", out var headerToken))
+                        {
+                            context.Token = headerToken;
+                            return Task.CompletedTask;
+                        }
+                        
+                        context.Token = string.Empty;
                         return Task.CompletedTask;
                     }
                 };
