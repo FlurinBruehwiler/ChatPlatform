@@ -17,12 +17,12 @@ public class UserService : IUserService
         _chatAppContext = chatAppContext;
         _authService = authService;
     }
-    
+
     public User GetUserByContextWithChats(HubCallerContext context)
     {
         if (context.User?.Identity is null)
             throw new BadRequestException(Errors.NoAuth);
-        
+
         var user = _chatAppContext.Users.Where(x => x.Username == context.UserIdentifier)
             .Include(x => x.Chats).FirstOrDefault();
 
@@ -34,21 +34,21 @@ public class UserService : IUserService
 
     public async Task<User> GetUserByContextAsync(HubCallerContext context)
     {
-        if(context.User?.Identity is null)
+        if (context.User?.Identity is null)
             throw new BadRequestException(Errors.NoAuth);
-        
-        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == context.UserIdentifier); 
-        
-        if(user is null)
+
+        var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == context.UserIdentifier);
+
+        if (user is null)
             throw new BadRequestException(Errors.UserNotFound);
 
         return user;
     }
-    
+
     public async Task<User> GetUserByUsernameAsync(string username)
     {
         var user = await _chatAppContext.Users.FirstOrDefaultAsync(x => x.Username == username);
-        if(user is null)
+        if (user is null)
             throw new BadRequestException(Errors.WrongPassword);
         return user;
     }
@@ -60,10 +60,17 @@ public class UserService : IUserService
 
     public async Task RegisterUser(DtoAuthUser dtoAuthUser, HttpResponse httpResponse)
     {
-        if(string.IsNullOrWhiteSpace(dtoAuthUser.Username) || dtoAuthUser.Username.Length < 3)
+        var user = await CreateUser(dtoAuthUser);
+
+        _authService.AppendAccessToken(httpResponse, user);
+    }
+
+    private async Task<User> CreateUser(DtoAuthUser dtoAuthUser)
+    {
+        if (string.IsNullOrWhiteSpace(dtoAuthUser.Username) || dtoAuthUser.Username.Length < 3)
             throw new BadRequestException(Errors.UsernameToShort);
-            
-        if(string.IsNullOrWhiteSpace(dtoAuthUser.Password) || dtoAuthUser.Password.Length < 6)
+
+        if (string.IsNullOrWhiteSpace(dtoAuthUser.Password) || dtoAuthUser.Password.Length < 6)
             throw new BadRequestException(Errors.PasswordToWeak);
 
         if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoAuthUser.Username))
@@ -78,7 +85,15 @@ public class UserService : IUserService
         };
         _chatAppContext.Users.Add(user);
         await _chatAppContext.SaveChangesAsync();
-        _authService.AppendAccessToken(httpResponse, user);
+
+        return user;
+    }
+
+    public async Task<string> MobileRegisterUser(DtoAuthUser dtoUser, HttpResponse httpResponse)
+    {
+        var user = await CreateUser(dtoUser);
+
+        return _authService.CreateToken(user);
     }
 
     public async Task LoginUser(DtoAuthUser dtoAuthUser, HttpResponse httpResponse)
@@ -87,7 +102,17 @@ public class UserService : IUserService
 
         if (!_authService.VerifyPasswordHash(dtoAuthUser.Password, user.PasswordHash, user.PasswordSalt))
             throw new BadRequestException(Errors.WrongPassword);
-    
+
         _authService.AppendAccessToken(httpResponse, user);
+    }
+
+    public async Task<string> MobileLoginUser(DtoAuthUser dtoAuthUser, HttpResponse httpResponse)
+    {
+        var user = await GetUserByUsernameAsync(dtoAuthUser.Username);
+
+        if (!_authService.VerifyPasswordHash(dtoAuthUser.Password, user.PasswordHash, user.PasswordSalt))
+            throw new BadRequestException(Errors.WrongPassword);
+
+        return _authService.CreateToken(user);
     }
 }

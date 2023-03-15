@@ -11,5 +11,7 @@ public interface IUserService
     public Task<User> GetUserByUsernameAsync(string username);
     public Task<User?> TryGetUserByUsernameAsync(string username);
     public Task RegisterUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
+    public Task<string> MobileRegisterUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
     public Task LoginUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
+    public Task<string> MobileLoginUser(DtoAuthUser dtoUser, HttpResponse httpResponse);
 }

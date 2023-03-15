@@ -1,23 +1,21 @@
-﻿namespace ChatPlatformMobile;
+﻿using ChatPlatformMobile.Models;
 
-public partial class MainPage : ContentPage
+namespace ChatPlatformMobile;
+
+public partial class MainPage
 {
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private async void Register(object sender, EventArgs e)
     {
-        count++;
+        await Navigation.PushAsync(new AuthPage(AuthenticationType.Register));
+    }
 
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
-
-        SemanticScreenReader.Announce(CounterBtn.Text);
+    private async void Login(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new AuthPage(AuthenticationType.Login));
     }
 }
