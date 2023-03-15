@@ -18,4 +18,9 @@ public class DtoFactory : IDtoFactory
     {
         return new DtoMessage(message.Content, message.User.Username, message.ChatId, message.MessageId);
     }
+
+    public DtoUser CreateDtoUser(User user)
+    {
+        return new DtoUser(user.Username, user.PicturePath);
+    }
 }

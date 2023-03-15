@@ -7,4 +7,5 @@ public interface IDtoFactory
 {
     public DtoChat CreateDtoChat(Chat chat);
     public DtoMessage CreateDtoMessage(Message message);
+    public DtoUser CreateDtoUser(User user);
 }

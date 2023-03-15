@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using ChatPlatformBackend.DtoModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ChatPlatformMobile.Pages;
@@ -14,6 +16,9 @@ public partial class CreateChatViewModel : ObservableObject
     
     [ObservableProperty]
     private string _chatName;
+
+    [ObservableProperty]
+    private ObservableCollection<DtoUser> _users;
 
     [RelayCommand]
     private async Task CreateChat()

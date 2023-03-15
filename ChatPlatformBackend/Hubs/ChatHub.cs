@@ -128,4 +128,12 @@ public class ChatHub : Hub
         await _chatAppContext.SaveChangesAsync();
         await _chatService.InviteUserToChatAsync(Clients, user, chat);
     }
+
+    public async Task<List<DtoUser>> GetAvailableUsers()
+    {
+        var user = await _userService.GetUserByContextAsync(Context);
+        var users = await _chatAppContext.Users.Where(x => x != user).ToListAsync();
+        var dtoUsers = users.Select(x => _dtoFactory.CreateDtoUser(x)).ToList();
+        return dtoUsers;
+    }
 }

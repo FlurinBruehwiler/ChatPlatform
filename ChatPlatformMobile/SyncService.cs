@@ -85,4 +85,9 @@ public class SyncService
     {
         return await _hubConnection.InvokeAsync<DtoUser>("GetCurrentUser");
     }
+    
+    public async Task<List<DtoUser>> GetAvailableUsersAsync()
+    {
+        return await _hubConnection.InvokeAsync<List<DtoUser>>("GetAvailableUsers");
+    }
 }
