@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatPlatformBackend", "ChatPlatformBackend\ChatPlatformBackend.csproj", "{698B5B7E-9687-4932-BE78-B6EC153DE603}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatPlatformBackend", "ChatPlatformBackend\ChatPlatformBackend.csproj", "{698B5B7E-9687-4932-BE78-B6EC153DE603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatPlatformMobile", "ChatPlatformMobile\ChatPlatformMobile.csproj", "{0F4FF31F-F814-47C4-9A89-7A204AA722C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatPlatformMobile", "ChatPlatformMobile\ChatPlatformMobile.csproj", "{0F4FF31F-F814-47C4-9A89-7A204AA722C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatPlatformShared", "ChatPlatformShared\ChatPlatformShared.csproj", "{F0F7F7F0-A93C-416A-BDC5-E410CBEF1F5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatPlatformShared", "ChatPlatformShared\ChatPlatformShared.csproj", "{F0F7F7F0-A93C-416A-BDC5-E410CBEF1F5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +21,7 @@ Global
 		{698B5B7E-9687-4932-BE78-B6EC153DE603}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F4FF31F-F814-47C4-9A89-7A204AA722C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F4FF31F-F814-47C4-9A89-7A204AA722C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4FF31F-F814-47C4-9A89-7A204AA722C2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{0F4FF31F-F814-47C4-9A89-7A204AA722C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4FF31F-F814-47C4-9A89-7A204AA722C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F0F7F7F0-A93C-416A-BDC5-E410CBEF1F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -25,6 +29,10 @@ Global
 		{F0F7F7F0-A93C-416A-BDC5-E410CBEF1F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0F7F7F0-A93C-416A-BDC5-E410CBEF1F5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D06B9D9-C9F8-4C32-ADF0-EA97F7CC392B}
+	EndGlobalSection
 EndGlobal
-
-

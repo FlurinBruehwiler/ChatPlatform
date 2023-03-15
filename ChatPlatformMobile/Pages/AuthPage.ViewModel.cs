@@ -47,7 +47,7 @@ public partial class AuthViewModel : ObservableObject
 
         await syncService.StartAsync();
         
-        // await Navigation.PushAsync(new ChatOverviewPage(syncService));
+        await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
     }
 
     partial void OnAuthenticationTypeChanged(AuthenticationType value)

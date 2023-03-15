@@ -30,6 +30,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<WelcomePage>();
         builder.Services.AddSingleton<WelcomeViewModel>();
 
+        builder.Services.AddSingleton<CreateChatPage>();
+        builder.Services.AddSingleton<CreateChatViewModel>();
+        
         builder.Services.AddSingleton<SyncService>();
 
 #if DEBUG

@@ -60,10 +60,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ViewModels" />
-    </ItemGroup>
-
-    <ItemGroup>
       <MauiXaml Update="Pages\ChatOverviewPage.xaml">
         <SubType>Designer</SubType>
       </MauiXaml>

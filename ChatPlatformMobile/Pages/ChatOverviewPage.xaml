@@ -15,7 +15,7 @@
         <Button Command="{Binding CreateChatCommand}" />
         <ListView ItemsSource="{Binding Chats}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type dtoModels:DtoChat}">
+                <DataTemplate>
                     <ViewCell>
                         <Label Text="Chat"></Label>
                     </ViewCell>

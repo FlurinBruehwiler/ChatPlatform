@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatPlatformBackend.Migrations
 {
     [DbContext(typeof(ChatAppContext))]
-    [Migration("20220614142214_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230315200637_InitialMigration")]
+    partial class InitialMigration
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
             modelBuilder.Entity("ChatPlatformBackend.Models.Chat", b =>
                 {
@@ -76,11 +77,10 @@ namespace ChatPlatformBackend.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
+                    b.Property<string>("PicturePath")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("picturePath")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -107,7 +107,7 @@ namespace ChatPlatformBackend.Migrations
             modelBuilder.Entity("ChatPlatformBackend.Models.Message", b =>
                 {
                     b.HasOne("ChatPlatformBackend.Models.Chat", "Chat")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -136,6 +136,11 @@ namespace ChatPlatformBackend.Migrations
                         .HasForeignKey("UsersUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ChatPlatformBackend.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("ChatPlatformBackend.Models.User", b =>
