@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:ChatPlatformMobile.Pages"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ChatPlatformMobile.Pages.MainPage"
+             x:DataType="pages:MainViewModel">
+    <ContentPage.Behaviors>
+        <behaviors:EventToCommandBehavior EventName="Loaded"
+                                          Command="{Binding InitCommand}" />
+    </ContentPage.Behaviors>
+</ContentPage>

@@ -6,22 +6,19 @@ namespace ChatPlatformMobile;
 
 public class SyncService
 {
-    private readonly HubConnection _hubConnection;
+    private HubConnection _hubConnection;
     
-    public SyncService()
+    public async Task StartAsync()
     {
-        var token =  Preferences.Default.Get(AuthPage.TokenKey, string.Empty);
+        var token =  Preferences.Default.Get(Constants.TokenKey, string.Empty);
         
         _hubConnection  = new HubConnectionBuilder()
-            .WithUrl($"{AuthPage.Url}/ChatHub", options =>
+            .WithUrl($"{Constants.Url}/ChatHub", options =>
             {
                 options.Headers.Add("Authorization", token);
             })
             .Build();
-    }
-
-    public async Task Start()
-    {
+        
         _hubConnection.On<DtoMessage>("ReceiveMessage", ReceiveMessage);
         _hubConnection.On<int>("ReceiveInvite", ReceiveInvite);
         _hubConnection.On<int>("ReceiveKick", ReceiveKick);
