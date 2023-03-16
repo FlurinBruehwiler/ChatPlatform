@@ -29,4 +29,11 @@ public partial class ChatViewModel : ObservableObject
         await _syncService.SendMessageAsync(Chat.ChatId, Input);
         Input = string.Empty;
     }
+
+    [RelayCommand]
+    private async Task LeaveChat()
+    {
+        await _syncService.LeaveChatAsync(Chat.ChatId);
+        await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
+    }
 }

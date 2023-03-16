@@ -11,6 +11,9 @@
         <behaviors:EventToCommandBehavior EventName="Loaded"
                                           Command="{Binding InitCommand}" />
     </ContentPage.Behaviors>
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" IsEnabled="False" />
+    </Shell.BackButtonBehavior>
     <VerticalStackLayout>
         <HorizontalStackLayout>
             <Button Text="Logout" Command="{Binding LogoutCommand}" />

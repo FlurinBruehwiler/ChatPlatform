@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:ChatPlatformMobile"
     xmlns:pages="clr-namespace:ChatPlatformMobile.Pages"
     FlyoutBehavior="Disabled">
-
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate pages:MainPage}"
