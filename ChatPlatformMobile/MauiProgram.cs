@@ -18,20 +18,25 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        builder.Services.AddSingleton<ChatOverviewPage>();
-        builder.Services.AddSingleton<ChatOverviewViewModel>();
+        builder.Services.AddTransient<ChatOverviewPage>();
+        builder.Services.AddTransient<ChatOverviewViewModel>();
 
-        builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<MainViewModel>();
 
-        builder.Services.AddSingleton<AuthPage>();
-        builder.Services.AddSingleton<AuthViewModel>();
+        builder.Services.AddTransient<AuthPage>();
+        builder.Services.AddTransient<AuthViewModel>();
 
         builder.Services.AddSingleton<WelcomePage>();
         builder.Services.AddSingleton<WelcomeViewModel>();
 
-        builder.Services.AddSingleton<CreateChatPage>();
-        builder.Services.AddSingleton<CreateChatViewModel>();
+        builder.Services.AddTransient<CreateChatPage>();
+        builder.Services.AddTransient<CreateChatViewModel>();
+
+        builder.Services.AddTransient<ChatPage>();
+        builder.Services.AddTransient<ChatViewModel>();
+
+        builder.Services.AddHttpClient();
         
         builder.Services.AddSingleton<SyncService>();
 

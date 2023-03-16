@@ -10,6 +10,6 @@
         <Entry Text="{Binding Username}" />
         <Label Text="Password"/>
         <Entry Text="{Binding Password}" IsPassword="True" />
-        <Button Command="{Binding ConfirmCommand}" />
+        <Button Text="Confirm" Command="{Binding ConfirmCommand}" />
     </VerticalStackLayout>
 </ContentPage>

@@ -7,6 +7,8 @@ namespace ChatPlatformMobile;
 public class SyncService
 {
     private HubConnection _hubConnection;
+
+    public List<DtoChat> Chats { get; set; }
     
     public async Task StartAsync()
     {
@@ -24,21 +26,26 @@ public class SyncService
         _hubConnection.On<int>("ReceiveKick", ReceiveKick);
         
         await _hubConnection.StartAsync();
+
+        Chats = await GetChatsAsync();
     }
 
-    private void ReceiveKick(int chatId)
+    private async Task ReceiveKick(int chatId)
     {
-        
+        await KickChatAsync(chatId);
+        var chat = Chats.First(x => x.ChatId == chatId);
+        Chats.Remove(chat);
     }
 
-    private void ReceiveInvite(int chatId)
+    private async Task ReceiveInvite(int chatId)
     {
-        
+        var chat = await JoinChatAsync(chatId);
+        Chats.Add(chat);
     }
 
     private void ReceiveMessage(DtoMessage dtoMessage)
     {
-        
+        Chats.First(x => x.ChatId == dtoMessage.ChatId).Messages.Add(dtoMessage);
     }
 
     public async Task SendMessageAsync(int chatId, string messageContent)
@@ -61,12 +68,12 @@ public class SyncService
         await _hubConnection.InvokeAsync("RemoveUserFromChat", chatId, username);
     }
     
-    public async Task<List<DtoChat>> GetChatsAsync()
+    private async Task<List<DtoChat>> GetChatsAsync()
     {
         return await _hubConnection.InvokeAsync<List<DtoChat>>("GetChats");
     }
-    
-    public async Task<DtoChat> JoinChatAsync(int chatId)
+
+    private async Task<DtoChat> JoinChatAsync(int chatId)
     {
         return await _hubConnection.InvokeAsync<DtoChat>("JoinChat", chatId);
     }
@@ -75,8 +82,8 @@ public class SyncService
     {
         await _hubConnection.InvokeAsync("LeaveChat", chatId);
     }
-    
-    public async Task KickChatAsync(int chatId)
+
+    private async Task KickChatAsync(int chatId)
     {
         await _hubConnection.InvokeAsync("KickChat", chatId);
     }    

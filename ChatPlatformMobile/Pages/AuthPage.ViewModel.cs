@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Linq;
+using System.Net.Http.Json;
 using ChatPlatformBackend.DtoModels;
 using ChatPlatformMobile.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,9 +9,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ChatPlatformMobile.Pages;
 
-[QueryProperty("_authenticationType", "Type")]
+[QueryProperty("Type", "Type")]
 public partial class AuthViewModel : ObservableObject
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+
     [ObservableProperty]
     private string _username;
     
@@ -21,19 +24,24 @@ public partial class AuthViewModel : ObservableObject
     private string _confirmButtonText;
 
     [ObservableProperty]
-    private AuthenticationType _authenticationType;
+    private string _type;
+
+    public AuthViewModel(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
     
     [RelayCommand]
     private async Task Confirm()
     {
-        var endpoint = AuthenticationType switch
+        var endpoint = Type switch
         {
-            AuthenticationType.Login => "/login",
-            AuthenticationType.Register => "/register",
+            nameof(AuthenticationType.Login) => "/login",
+            nameof(AuthenticationType.Register) => "/register",
             _ => throw new ArgumentOutOfRangeException()
         };
-        
-        var client = new HttpClient();
+
+        var client = _httpClientFactory.CreateClient();
         var res = await client.PostAsJsonAsync($"{Constants.Url}/mobile{endpoint}", new DtoAuthUser(Username, Password));
 
         if(!res.IsSuccessStatusCode)
@@ -50,12 +58,12 @@ public partial class AuthViewModel : ObservableObject
         await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
     }
 
-    partial void OnAuthenticationTypeChanged(AuthenticationType value)
+    partial void OnTypeChanged(string value)
     {
         ConfirmButtonText = value switch
         {
-            AuthenticationType.Login => "Login",
-            AuthenticationType.Register => "Registrieren",
+            nameof(AuthenticationType.Login) => "Login",
+            nameof(AuthenticationType.Register) => "Registrieren",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
