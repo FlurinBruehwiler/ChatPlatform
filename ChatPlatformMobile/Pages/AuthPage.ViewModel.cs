@@ -13,6 +13,7 @@ namespace ChatPlatformMobile.Pages;
 public partial class AuthViewModel : ObservableObject
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly SyncService _syncService;
 
     [ObservableProperty]
     private string _username;
@@ -26,9 +27,10 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _type;
 
-    public AuthViewModel(IHttpClientFactory httpClientFactory)
+    public AuthViewModel(IHttpClientFactory httpClientFactory, SyncService syncService)
     {
         _httpClientFactory = httpClientFactory;
+        _syncService = syncService;
     }
     
     [RelayCommand]
@@ -51,6 +53,8 @@ public partial class AuthViewModel : ObservableObject
         
         Preferences.Default.Set(Constants.TokenKey, token.Trim('"'));
 
+        await _syncService.InitAsync();
+        
         await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
     }
 

@@ -13,12 +13,23 @@ public partial class ChatViewModel : ObservableObject
     {
         _syncService = syncService;
     }
-    
-    [ObservableProperty]
-    private Chat _chat;
 
-    [ObservableProperty]
-    private string _input;
+    [ObservableProperty] private Chat _chat;
+
+    [ObservableProperty] private string _input;
+
+    [RelayCommand]
+    private void Init()
+    {
+        _syncService.RegisterLeaveChatEvent(Chat,
+            () =>
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
+                });
+            });
+    }
 
     [RelayCommand]
     private async Task Completed()

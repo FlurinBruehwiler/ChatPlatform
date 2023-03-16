@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using ChatPlatformBackend.DtoModels;
-using ChatPlatformMobile.Models;
+﻿using ChatPlatformMobile.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -17,12 +15,6 @@ public partial class ChatOverviewViewModel : ObservableObject
         _syncService = syncService;
     }
 
-    [RelayCommand]
-    private async Task InitAsync()
-    {
-        await SyncService.StartAsync();
-    }
-    
     [RelayCommand]
     private async Task ChatClick(Chat chat)
     {
@@ -41,6 +33,7 @@ public partial class ChatOverviewViewModel : ObservableObject
     [RelayCommand]
     private async Task Logout()
     {
+        MauiProgram.DeleteSyncService();
         Preferences.Default.Set(Constants.TokenKey, string.Empty);
         await Shell.Current.GoToAsync(nameof(WelcomePage));
     }

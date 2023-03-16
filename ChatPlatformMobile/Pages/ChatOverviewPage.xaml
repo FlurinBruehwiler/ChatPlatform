@@ -7,10 +7,6 @@
              xmlns:pages="clr-namespace:ChatPlatformMobile.Pages"
              xmlns:models="clr-namespace:ChatPlatformMobile.Models"
              x:DataType="pages:ChatOverviewViewModel">
-    <ContentPage.Behaviors>
-        <behaviors:EventToCommandBehavior EventName="Loaded"
-                                          Command="{Binding InitCommand}" />
-    </ContentPage.Behaviors>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" IsEnabled="False" />
     </Shell.BackButtonBehavior>
@@ -18,6 +14,7 @@
         <HorizontalStackLayout>
             <Button Text="Logout" Command="{Binding LogoutCommand}" />
             <Button Text="New Chat" Command="{Binding CreateChatCommand}" />
+            <Label Text="{Binding SyncService.CurrentUser.Username }" />
         </HorizontalStackLayout>
         <CollectionView ItemsSource="{Binding SyncService.Chats}"
                         SelectionMode="None">

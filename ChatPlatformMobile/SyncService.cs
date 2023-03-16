@@ -15,12 +15,16 @@ public partial class SyncService : ObservableObject
     [ObservableProperty] 
     private ObservableCollection<Chat> _chats;
 
+    [ObservableProperty]
+    private DtoUser _currentUser;
+    
+    
     public SyncService(DtoMapper dtoMapper)
     {
         _dtoMapper = dtoMapper;
     }
-    
-    public async Task StartAsync()
+
+    public async Task InitAsync()
     {
         var token =  Preferences.Default.Get(Constants.TokenKey, string.Empty);
         
@@ -38,15 +42,30 @@ public partial class SyncService : ObservableObject
         await _hubConnection.StartAsync();
 
         var chats = await GetChatsAsync();
+        CurrentUser = await GetCurrentUserAsync();
 
         Chats = new ObservableCollection<Chat>(chats.Select(x => _dtoMapper.ToChat(x)));
     }
-
+    
     private async Task ReceiveKick(int chatId)
     {
         await KickChatAsync(chatId);
         var chat = Chats.First(x => x.ChatId == chatId);
+
+        if (_leaveChatEvent.HasValue)
+        {
+            if (_leaveChatEvent.Value.chat == chat)
+                _leaveChatEvent.Value.callback();
+        }
+        
         Chats.Remove(chat);
+    }
+
+    private (Chat chat, Action callback)? _leaveChatEvent;
+
+    public void RegisterLeaveChatEvent(Chat chat, Action callback)
+    {
+        _leaveChatEvent = (chat, callback);
     }
 
     private async Task ReceiveInvite(int chatId)
@@ -98,9 +117,9 @@ public partial class SyncService : ObservableObject
     private async Task KickChatAsync(int chatId)
     {
         await _hubConnection.InvokeAsync("KickChat", chatId);
-    }    
-    
-    public async Task<DtoUser> GetCurrentUserAsync()
+    }
+
+    private async Task<DtoUser> GetCurrentUserAsync()
     {
         return await _hubConnection.InvokeAsync<DtoUser>("GetCurrentUser");
     }

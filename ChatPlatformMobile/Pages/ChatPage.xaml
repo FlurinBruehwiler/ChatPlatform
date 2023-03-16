@@ -7,6 +7,10 @@
              xmlns:dtoModels="clr-namespace:ChatPlatformBackend.DtoModels;assembly=ChatPlatformShared"
              x:Class="ChatPlatformMobile.Pages.ChatPage"
              x:DataType="pages:ChatViewModel">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded"
+                                          Command="{Binding InitCommand}" />
+    </ContentPage.Behaviors>
     <VerticalStackLayout>
         <Button Text="Chat verlassen" Command="{Binding LeaveChatCommand}" />
         <CollectionView ItemsSource="{Binding Chat.Messages}"

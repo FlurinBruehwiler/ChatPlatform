@@ -5,6 +5,9 @@
              xmlns:pages="clr-namespace:ChatPlatformMobile.Pages"
              x:Class="ChatPlatformMobile.Pages.WelcomePage"
              x:DataType="pages:WelcomeViewModel">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" IsEnabled="False" />
+    </Shell.BackButtonBehavior>
     <VerticalStackLayout>
 
         <Label

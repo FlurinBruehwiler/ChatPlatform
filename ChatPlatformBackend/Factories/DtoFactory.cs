@@ -16,7 +16,8 @@ public class DtoFactory : IDtoFactory
 
     public DtoMessage CreateDtoMessage(Message message)
     {
-        return new DtoMessage(message.Content, message.User.Username, message.ChatId, message.MessageId);
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+        return new DtoMessage(message.Content, message.User?.Username, message.ChatId, message.MessageId);
     }
 
     public DtoUser CreateDtoUser(User user)

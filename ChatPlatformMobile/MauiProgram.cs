@@ -6,6 +6,8 @@ namespace ChatPlatformMobile;
 
 public static class MauiProgram
 {
+    private static SyncService _syncService;
+    
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -27,8 +29,8 @@ public static class MauiProgram
         builder.Services.AddTransient<AuthPage>();
         builder.Services.AddTransient<AuthViewModel>();
 
-        builder.Services.AddSingleton<WelcomePage>();
-        builder.Services.AddSingleton<WelcomeViewModel>();
+        builder.Services.AddTransient<WelcomePage>();
+        builder.Services.AddTransient<WelcomeViewModel>();
 
         builder.Services.AddTransient<CreateChatPage>();
         builder.Services.AddTransient<CreateChatViewModel>();
@@ -37,14 +39,28 @@ public static class MauiProgram
         builder.Services.AddTransient<ChatViewModel>();
 
         builder.Services.AddHttpClient();
-        
-        builder.Services.AddSingleton<SyncService>();
+
+        builder.Services.AddTransient(provider =>
+        {
+            if (_syncService is not null)
+                return _syncService;
+            
+            _syncService = new SyncService(provider.GetRequiredService<DtoMapper>());
+
+            return _syncService;
+        });
         builder.Services.AddSingleton<DtoMapper>();
+        
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
+    }
+    
+    public static void DeleteSyncService()
+    {
+        _syncService = null;
     }
 }
