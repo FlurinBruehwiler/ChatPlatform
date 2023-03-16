@@ -1,4 +1,4 @@
-﻿using ChatPlatformBackend.DtoModels;
+﻿using ChatPlatformMobile.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -15,7 +15,7 @@ public partial class ChatViewModel : ObservableObject
     }
     
     [ObservableProperty]
-    private DtoChat _chat;
+    private Chat _chat;
 
     [ObservableProperty]
     private string _input;

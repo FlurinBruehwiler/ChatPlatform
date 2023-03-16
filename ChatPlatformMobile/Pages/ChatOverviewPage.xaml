@@ -5,7 +5,7 @@
              x:Class="ChatPlatformMobile.Pages.ChatOverviewPage"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:pages="clr-namespace:ChatPlatformMobile.Pages"
-             xmlns:dtoModels="clr-namespace:ChatPlatformBackend.DtoModels;assembly=ChatPlatformShared"
+             xmlns:models="clr-namespace:ChatPlatformMobile.Models"
              x:DataType="pages:ChatOverviewViewModel">
     <ContentPage.Behaviors>
         <behaviors:EventToCommandBehavior EventName="Loaded"
@@ -16,10 +16,10 @@
             <Button Text="Logout" Command="{Binding LogoutCommand}" />
             <Button Text="New Chat" Command="{Binding CreateChatCommand}" />
         </HorizontalStackLayout>
-        <CollectionView ItemsSource="{Binding Chats}"
+        <CollectionView ItemsSource="{Binding SyncService.Chats}"
                         SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="dtoModels:DtoChat">
+                <DataTemplate x:DataType="models:Chat">
                     <Frame>
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer

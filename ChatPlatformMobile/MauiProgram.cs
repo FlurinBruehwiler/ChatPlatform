@@ -39,6 +39,7 @@ public static class MauiProgram
         builder.Services.AddHttpClient();
         
         builder.Services.AddSingleton<SyncService>();
+        builder.Services.AddSingleton<DtoMapper>();
 
 #if DEBUG
         builder.Logging.AddDebug();

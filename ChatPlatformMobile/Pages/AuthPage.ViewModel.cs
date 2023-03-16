@@ -51,10 +51,6 @@ public partial class AuthViewModel : ObservableObject
         
         Preferences.Default.Set(Constants.TokenKey, token.Trim('"'));
 
-        var syncService = new SyncService();
-
-        await syncService.StartAsync();
-        
         await Shell.Current.GoToAsync(nameof(ChatOverviewPage));
     }
 

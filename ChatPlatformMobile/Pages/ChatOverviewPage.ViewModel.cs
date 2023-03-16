@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using ChatPlatformBackend.DtoModels;
+using ChatPlatformMobile.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,10 +8,9 @@ namespace ChatPlatformMobile.Pages;
 
 public partial class ChatOverviewViewModel : ObservableObject
 {
-    private readonly SyncService _syncService;
-
+    
     [ObservableProperty]
-    private ObservableCollection<DtoChat> _chats;
+    private SyncService _syncService;
 
     public ChatOverviewViewModel(SyncService syncService)
     {
@@ -20,12 +20,11 @@ public partial class ChatOverviewViewModel : ObservableObject
     [RelayCommand]
     private async Task InitAsync()
     {
-        await _syncService.StartAsync();
-        Chats = new ObservableCollection<DtoChat>(_syncService.Chats);
+        await SyncService.StartAsync();
     }
     
     [RelayCommand]
-    private async Task ChatClick(DtoChat chat)
+    private async Task ChatClick(Chat chat)
     {
         await Shell.Current.GoToAsync(nameof(ChatPage), new Dictionary<string, object>
         {

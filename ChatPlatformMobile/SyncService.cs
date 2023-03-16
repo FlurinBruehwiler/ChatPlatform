@@ -1,14 +1,24 @@
 ﻿
+using System.Collections.ObjectModel;
 using ChatPlatformBackend.DtoModels;
+using ChatPlatformMobile.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ChatPlatformMobile;
 
-public class SyncService
+public partial class SyncService : ObservableObject
 {
+    private readonly DtoMapper _dtoMapper;
     private HubConnection _hubConnection;
 
-    public List<DtoChat> Chats { get; set; }
+    [ObservableProperty] 
+    private ObservableCollection<Chat> _chats;
+
+    public SyncService(DtoMapper dtoMapper)
+    {
+        _dtoMapper = dtoMapper;
+    }
     
     public async Task StartAsync()
     {
@@ -27,7 +37,9 @@ public class SyncService
         
         await _hubConnection.StartAsync();
 
-        Chats = await GetChatsAsync();
+        var chats = await GetChatsAsync();
+
+        Chats = new ObservableCollection<Chat>(chats.Select(x => _dtoMapper.ToChat(x)));
     }
 
     private async Task ReceiveKick(int chatId)
@@ -40,7 +52,7 @@ public class SyncService
     private async Task ReceiveInvite(int chatId)
     {
         var chat = await JoinChatAsync(chatId);
-        Chats.Add(chat);
+        Chats.Add(_dtoMapper.ToChat(chat));
     }
 
     private void ReceiveMessage(DtoMessage dtoMessage)
