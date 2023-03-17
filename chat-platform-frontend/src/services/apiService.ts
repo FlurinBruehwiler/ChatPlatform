@@ -10,6 +10,7 @@ let login = async (username: string, password: string) : Promise<void | string> 
       password: password,
     } as IAuthUser);
   } catch (err) {
+    console.log(err);
     // @ts-ignore
     return err.response.data.errorMessage;
   }

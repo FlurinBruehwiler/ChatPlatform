@@ -1,4 +1,5 @@
 import IMessage from "../models/IMessage";
+import {baseUrl} from "../axios";
 
 interface MessageProps {
     Message: IMessage;
@@ -12,7 +13,7 @@ function Message(props: MessageProps) {
                 <i></i>
             </div>
             <div>{props.Message.messageContent}</div>
-            {props.Message.image && <img src={`https://localhost:7087/${props.Message.image}`} alt="" className={"block w-auto h-auto"}/>}
+            {props.Message.image && <img src={`${baseUrl}/${props.Message.image}`} alt="" className={"block w-auto h-auto"}/>}
         </li>
     );
 }
