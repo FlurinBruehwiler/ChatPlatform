@@ -56,11 +56,12 @@ public class AuthService : IAuthService
     {
         httpResponse.Cookies.Append(_configuration.GetSection("CookieName").Value, CreateToken(user), new CookieOptions
         {
-            SameSite = SameSiteMode.Strict,
-            Secure = false,
+            SameSite = SameSiteMode.None,
+            Secure = true,
             Domain = null,
-            HttpOnly = true,
+            HttpOnly = false,
             IsEssential = true,
+            Expires = DateTimeOffset.MaxValue
         });
         httpResponse.Headers.AccessControlAllowCredentials = "true";
     }

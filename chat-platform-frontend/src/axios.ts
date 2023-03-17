@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = "https://chatplatform-production-5907.up.railway.app";
+export const baseUrl = "https://webapp-230317125435.azurewebsites.net";
 
 const instance = axios.create({
   baseURL: baseUrl,
