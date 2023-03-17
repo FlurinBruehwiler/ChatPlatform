@@ -39,4 +39,5 @@ app.UseEndpointDefinitions();
 app.MapHub<ChatHub>("/chatHub");
 
 
-app.Run();
+
+app.Run($"https://localhost:{Environment.GetEnvironmentVariable("PORT") ?? "3000"}");
