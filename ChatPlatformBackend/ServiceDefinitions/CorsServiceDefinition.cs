@@ -9,7 +9,7 @@ public class CorsServiceDefinition : IServiceDefinition
             options.AddDefaultPolicy(policyBuilder =>
             {
                 policyBuilder
-                    .WithOrigins("https://localhost:3000", "http://localhost:3000")
+                    .WithOrigins("https://localhost:3000", "http://localhost:3000", "https://chatplatform-production-5907.up.railway.app")
                     .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
             });
         });
