@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios, {baseUrl} from "../axios";
 import IAuthUser from "../models/IAuthUser";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import {AxiosError} from "axios";
@@ -47,7 +47,7 @@ let checkIfLoggedIn = async () => {
 
 const tryEstablishConnection = () => {
   return new HubConnectionBuilder()
-    .withUrl("https://localhost:7087/chatHub")
+    .withUrl(baseUrl + "/chatHub")
     .withAutomaticReconnect()
     .build();
 };
