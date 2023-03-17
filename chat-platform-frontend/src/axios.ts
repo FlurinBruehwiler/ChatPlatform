@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = "https://webapp-230317093134.azurewebsites.net";
+export const baseUrl = "https://localhost:7087";
 
 const instance = axios.create({
   baseURL: baseUrl,
