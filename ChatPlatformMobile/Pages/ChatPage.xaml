@@ -13,16 +13,6 @@
     </ContentPage.Behaviors>
     <VerticalStackLayout>
         <Button Text="Chat verlassen" Command="{Binding LeaveChatCommand}" />
-        <CollectionView ItemsSource="{Binding Chat.Messages}"
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="dtoModels:DtoMessage">
-                    <Frame>
-                        <Label Text="{Binding MessageContent}"></Label>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
         <HorizontalStackLayout>
             <Entry Text="{Binding Input}" ReturnType="Send">
                 <Entry.Behaviors>
@@ -33,6 +23,18 @@
             </Entry>
             <Button Text="Take Photo" Command="{Binding TakePhotoCommand}" />
         </HorizontalStackLayout>
-
+        <CollectionView ItemsSource="{Binding Chat.Messages}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dtoModels:DtoMessage">
+                    <Frame>
+                        <VerticalStackLayout>
+                            <Label Text="{Binding MessageContent}" />
+                            <Image Source="{Binding Image}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>

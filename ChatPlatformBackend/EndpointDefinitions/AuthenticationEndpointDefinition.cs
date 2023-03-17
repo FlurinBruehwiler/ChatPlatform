@@ -34,7 +34,7 @@ public class AuthenticationEndpointDefinition : IEndpointDefinition
 
         await using var stream = file.OpenReadStream();
 
-        name = $"{name}{Path.GetExtension(file.FileName)}";
+        // name = $"{name}{Path.GetExtension(file.FileName)}";
         
         await using var fileStream = new FileStream($"wwwroot/{name}", FileMode.Create, FileAccess.Write);
         await stream.CopyToAsync(fileStream);

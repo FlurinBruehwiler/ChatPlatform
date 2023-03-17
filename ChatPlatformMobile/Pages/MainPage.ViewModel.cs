@@ -6,10 +6,12 @@ namespace ChatPlatformMobile.Pages;
 public partial class MainViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public MainViewModel(SyncService syncService)
+    public MainViewModel(SyncService syncService, IHttpClientFactory httpClientFactory)
     {
         _syncService = syncService;
+        _httpClientFactory = httpClientFactory;
     }
 
     [RelayCommand]
@@ -23,8 +25,7 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var handlerService = new HttpsClientHandlerService();
-        var client = new HttpClient(handlerService.GetPlatformMessageHandler());
+        var client = _httpClientFactory.CreateClient();
 
         using var requestMessage =
             new HttpRequestMessage(HttpMethod.Get, $"{Constants.Url}/protected");

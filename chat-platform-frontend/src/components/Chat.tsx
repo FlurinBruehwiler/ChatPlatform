@@ -33,16 +33,19 @@ function Chat(props: ChatProps) {
     const formData = new FormData();
     formData.append("name", file.name);
     formData.append("file", file);
+    
+    let re = /(?:\.([^.]+))?$/;
+    // @ts-ignore
+    let extension = re.exec(file.name)[1];
+
+    name = name + "." + extension
 
     await instance.post(`/upload?name=${name}`, formData)
 
     setFile(undefined);
 
-    let re = /(?:\.([^.]+))?$/;
-    // @ts-ignore
-    let extension = re.exec(file.name)[1];
 
-    return name + "." + extension;
+    return name;
   };
 
   const sendMessage = async (event: { preventDefault: () => void }) => {

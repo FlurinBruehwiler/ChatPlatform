@@ -10,6 +10,7 @@ namespace ChatPlatformMobile;
 public partial class SyncService : ObservableObject
 {
     private readonly DtoMapper _dtoMapper;
+    private readonly IHttpClientFactory _httpClientFactory;
     private HubConnection _hubConnection;
 
     [ObservableProperty] 
@@ -32,11 +33,6 @@ public partial class SyncService : ObservableObject
             .WithUrl($"{Constants.Url}/ChatHub", options =>
             {
                 options.Headers.Add("Authorization", token);
-                options.HttpMessageHandlerFactory = _ =>
-                {
-                    var handlerService = new HttpsClientHandlerService();
-                    return handlerService.GetPlatformMessageHandler();
-                };
             })
             .Build();
         
@@ -81,7 +77,10 @@ public partial class SyncService : ObservableObject
 
     private void ReceiveMessage(DtoMessage dtoMessage)
     {
-        Chats.First(x => x.ChatId == dtoMessage.ChatId).Messages.Add(dtoMessage);
+        Chats.First(x => x.ChatId == dtoMessage.ChatId).Messages.Insert(0, dtoMessage with
+        {
+            Image = $"{Constants.Url}/{dtoMessage.Image}"
+        });
     }
 
     public async Task SendMessageAsync(int chatId, string messageContent, string? image)

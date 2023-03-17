@@ -67,10 +67,10 @@ public class UserService : IUserService
 
     private async Task<User> CreateUser(DtoAuthUser dtoAuthUser)
     {
-        if (string.IsNullOrWhiteSpace(dtoAuthUser.Username) || dtoAuthUser.Username.Length < 3)
+        if (string.IsNullOrWhiteSpace(dtoAuthUser.Username))
             throw new BadRequestException(Errors.UsernameToShort);
 
-        if (string.IsNullOrWhiteSpace(dtoAuthUser.Password) || dtoAuthUser.Password.Length < 6)
+        if (string.IsNullOrWhiteSpace(dtoAuthUser.Password))
             throw new BadRequestException(Errors.PasswordToWeak);
 
         if (await _chatAppContext.Users.AnyAsync(x => x.Username == dtoAuthUser.Username))

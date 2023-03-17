@@ -9,10 +9,12 @@ namespace ChatPlatformMobile.Pages;
 public partial class ChatViewModel : ObservableObject, IDisposable
 {
     private readonly SyncService _syncService;
-    
-    public ChatViewModel(SyncService syncService)
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public ChatViewModel(SyncService syncService, IHttpClientFactory httpClientFactory)
     {
         _syncService = syncService;
+        _httpClientFactory = httpClientFactory;
     }
 
     [ObservableProperty] private Chat _chat;
@@ -71,11 +73,10 @@ public partial class ChatViewModel : ObservableObject, IDisposable
         
         multipartFormContent.Add(fileStreamContent, name: guid.ToString("N"), fileName: _currentPhotoName);
 
-        var handlerService = new HttpsClientHandlerService();
-        var httpClient = new HttpClient(handlerService.GetPlatformMessageHandler());
+        var httpClient = _httpClientFactory.CreateClient();
 
         using var requestMessage =
-            new HttpRequestMessage(HttpMethod.Post, $"{Constants.Url}/upload");
+            new HttpRequestMessage(HttpMethod.Post, $"{Constants.Url}/upload?name={_currentPhotoName}");
 
         var token = Preferences.Default.Get(Constants.TokenKey, string.Empty);
         

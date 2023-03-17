@@ -17,7 +17,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CheckedUser">
                     <HorizontalStackLayout>
-                        <Label TextColor="AliceBlue" Text="{Binding User.Username}"></Label>
+                        <Label Text="{Binding User.Username}"></Label>
                         <CheckBox IsChecked="{Binding Enabled}"></CheckBox>
                     </HorizontalStackLayout>
                 </DataTemplate>

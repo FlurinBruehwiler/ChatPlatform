@@ -37,6 +37,8 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ChatPage>();
         builder.Services.AddTransient<ChatViewModel>();
+
+        builder.Services.AddHttpClient();
         
         builder.Services.AddTransient(provider =>
         {
