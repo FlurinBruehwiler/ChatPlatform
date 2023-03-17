@@ -12,6 +12,7 @@ function Message(props: MessageProps) {
                 <i></i>
             </div>
             <div>{props.Message.messageContent}</div>
+            {props.Message.image && <img src={`https://localhost:7087/${props.Message.image}`} alt="" className={"block w-auto h-auto"}/>}
         </li>
     );
 }

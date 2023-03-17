@@ -15,7 +15,8 @@ public class MessageService : IMessageService
         _userService = userService;
     }
     
-    public async Task<Message> CreateMessageAsync(HubCallerContext context, int chatId, string messageContent)
+    public async Task<Message> CreateMessageAsync(HubCallerContext context, int chatId, string messageContent,
+        string? image)
     {
         var chat = await _chatService.GetChatByIdAsync(chatId);
         var user = await _userService.GetUserByContextAsync(context);
@@ -26,6 +27,7 @@ public class MessageService : IMessageService
             Content = messageContent,
             User = user,
             DateTime = DateTime.Now,
+            Image = image
         };
 
         return message;

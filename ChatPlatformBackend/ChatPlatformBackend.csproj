@@ -20,4 +20,8 @@
       <ProjectReference Include="..\ChatPlatformShared\ChatPlatformShared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot" />
+    </ItemGroup>
+
 </Project>

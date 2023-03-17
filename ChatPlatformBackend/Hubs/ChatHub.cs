@@ -27,12 +27,12 @@ public class ChatHub : Hub
         _dtoFactory = dtoFactory;
     }
     
-    public async Task SendMessage(int chatId, string messageContent)
+    public async Task SendMessage(int chatId, string messageContent, string? image)
     {
-        var message = await _messageService.CreateMessageAsync(Context, chatId, messageContent);
+        var message = await _messageService.CreateMessageAsync(Context, chatId, messageContent, image);
         _chatAppContext.Messages.Add(message);
         await _chatAppContext.SaveChangesAsync();
-        var dtoMessage = new DtoMessage(message.Content, message.User.Username, chatId, message.MessageId);
+        var dtoMessage = new DtoMessage(message.Content, message.User.Username, chatId, message.MessageId, image);
         await _chatService.SendMessage(Clients, chatId, dtoMessage);
     }
 

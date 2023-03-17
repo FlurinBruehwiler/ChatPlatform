@@ -15,6 +15,8 @@ builder.AddServices();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 app.UseOptions();
 app.UseCors();
 

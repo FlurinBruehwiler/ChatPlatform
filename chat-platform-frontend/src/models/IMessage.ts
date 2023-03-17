@@ -3,4 +3,5 @@ export default interface IMessage {
     username: string;
     chatId: number;
     messageId: number;
+    image?: string;
 }

@@ -23,12 +23,16 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Entry Text="{Binding Input}" ReturnType="Send">
-            <Entry.Behaviors>
-                <toolkit:EventToCommandBehavior 
-                    EventName="Completed"
-                    Command="{Binding CompletedCommand}"/>
-            </Entry.Behaviors>
-        </Entry>
+        <HorizontalStackLayout>
+            <Entry Text="{Binding Input}" ReturnType="Send">
+                <Entry.Behaviors>
+                    <toolkit:EventToCommandBehavior 
+                        EventName="Completed"
+                        Command="{Binding CompletedCommand}"/>
+                </Entry.Behaviors>
+            </Entry>
+            <Button Text="Take Photo" Command="{Binding TakePhotoCommand}" />
+        </HorizontalStackLayout>
+
     </VerticalStackLayout>
 </ContentPage>

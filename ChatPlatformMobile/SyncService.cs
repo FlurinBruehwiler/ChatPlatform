@@ -32,6 +32,11 @@ public partial class SyncService : ObservableObject
             .WithUrl($"{Constants.Url}/ChatHub", options =>
             {
                 options.Headers.Add("Authorization", token);
+                options.HttpMessageHandlerFactory = _ =>
+                {
+                    var handlerService = new HttpsClientHandlerService();
+                    return handlerService.GetPlatformMessageHandler();
+                };
             })
             .Build();
         
@@ -79,9 +84,9 @@ public partial class SyncService : ObservableObject
         Chats.First(x => x.ChatId == dtoMessage.ChatId).Messages.Add(dtoMessage);
     }
 
-    public async Task SendMessageAsync(int chatId, string messageContent)
+    public async Task SendMessageAsync(int chatId, string messageContent, string? image)
     {
-        await _hubConnection.InvokeAsync("SendMessage", chatId, messageContent);
+        await _hubConnection.InvokeAsync("SendMessage", chatId, messageContent, image);
     }
     
     public async Task CreateChatAsync(string name, List<string> users)

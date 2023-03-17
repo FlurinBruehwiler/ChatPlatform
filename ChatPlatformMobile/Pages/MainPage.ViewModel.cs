@@ -1,17 +1,14 @@
-﻿using System.Net.Http.Headers;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ChatPlatformMobile.Pages;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly SyncService _syncService;
 
-    public MainViewModel(IHttpClientFactory httpClientFactory, SyncService syncService)
+    public MainViewModel(SyncService syncService)
     {
-        _httpClientFactory = httpClientFactory;
         _syncService = syncService;
     }
 
@@ -26,7 +23,8 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var client = _httpClientFactory.CreateClient();
+        var handlerService = new HttpsClientHandlerService();
+        var client = new HttpClient(handlerService.GetPlatformMessageHandler());
 
         using var requestMessage =
             new HttpRequestMessage(HttpMethod.Get, $"{Constants.Url}/protected");

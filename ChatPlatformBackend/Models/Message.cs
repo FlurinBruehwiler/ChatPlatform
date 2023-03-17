@@ -12,4 +12,5 @@ public class Message
 
     public int UserId { get; set; }
     public User User { get; set; } = null!;
+    public string? Image { get; set; }
 }

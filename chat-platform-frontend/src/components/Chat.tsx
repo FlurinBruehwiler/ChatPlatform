@@ -1,8 +1,9 @@
 import IChat from "../models/IChat";
-import React, { useState } from "react";
+import React, {ChangeEvent, useRef, useState} from "react";
 import Message from "./Message";
 import { SignalRService } from "../services/signalRService";
 import IMessage from "../models/IMessage";
+import instance from "../axios";
 
 interface ChatProps {
   Chat: IChat;
@@ -13,12 +14,43 @@ interface ChatProps {
 function Chat(props: ChatProps) {
   const [messageContent, setMessageContent] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [file, setFile] = useState<File>();
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUploadClick = async () => {
+    if (!file) {
+      return;
+    }
+    console.log("uploading file");
+
+    let name = crypto.randomUUID();
+
+    const formData = new FormData();
+    formData.append("name", file.name);
+    formData.append("file", file);
+
+    await instance.post(`/upload?name=${name}`, formData)
+
+    setFile(undefined);
+
+    let re = /(?:\.([^.]+))?$/;
+    // @ts-ignore
+    let extension = re.exec(file.name)[1];
+
+    return name + "." + extension;
+  };
 
   const sendMessage = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    let res = await handleUploadClick();
     if (messageContent.trim().length === 0) return;
     setMessageContent("");
-    await props.SignalRService.sendMessage(props.Chat.chatId, messageContent);
+    await props.SignalRService.sendMessage(props.Chat.chatId, messageContent, res);
   };
 
   const addUser = async () => {
@@ -76,11 +108,12 @@ function Chat(props: ChatProps) {
           placeholder="content"
           className="w-full px-3 py-2 text-blue-800 border border-blue-300 rounded-md bg-blue-50 focus:outline-none focus:ring-1 focus:ring-blue-300"
         />
+        <input type={"file"} onChange={handleFileChange} accept="image/png, image/jpeg" className={"rounded-full bg-blue-600 w-16 h-11"} />
 
         <button
           onClick={sendMessage}
-          className={"rounded-full bg-blue-600 w-11 h-11"}
-        ></button>
+          className={"rounded-full bg-blue-600 w-16 h-11"}
+        >Send</button>
       </form>
     </div>
   );

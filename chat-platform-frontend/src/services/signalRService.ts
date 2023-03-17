@@ -26,10 +26,10 @@ class SignalRService {
     });
   };
 
-  sendMessage = async (chatId: number, messageContent: string) => {
+  sendMessage = async (chatId: number, messageContent: string, image: string | undefined) => {
     console.log(chatId);
     if (!this.connection) throw "Connection does not exist";
-    await this.connection.invoke("SendMessage", chatId, messageContent);
+    await this.connection.invoke("SendMessage", chatId, messageContent, image);
   };
 
   createChat = async (name: string, users: string[]) => {

@@ -12,7 +12,6 @@ namespace ChatPlatformMobile.Pages;
 [QueryProperty("Type", "Type")]
 public partial class AuthViewModel : ObservableObject
 {
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly SyncService _syncService;
 
     [ObservableProperty]
@@ -27,9 +26,8 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _type;
 
-    public AuthViewModel(IHttpClientFactory httpClientFactory, SyncService syncService)
+    public AuthViewModel(SyncService syncService)
     {
-        _httpClientFactory = httpClientFactory;
         _syncService = syncService;
     }
     
@@ -43,7 +41,8 @@ public partial class AuthViewModel : ObservableObject
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        var client = _httpClientFactory.CreateClient();
+        var handlerService = new HttpsClientHandlerService();
+        var client = new HttpClient(handlerService.GetPlatformMessageHandler());
         var res = await client.PostAsJsonAsync($"{Constants.Url}/mobile{endpoint}", new DtoAuthUser(Username, Password));
 
         if(!res.IsSuccessStatusCode)
