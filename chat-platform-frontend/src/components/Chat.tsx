@@ -33,7 +33,7 @@ function Chat(props: ChatProps) {
     const formData = new FormData();
     formData.append("name", file.name);
     formData.append("file", file);
-    
+
     let re = /(?:\.([^.]+))?$/;
     // @ts-ignore
     let extension = re.exec(file.name)[1];
