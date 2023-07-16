@@ -1,3 +1,8 @@
-# Chat Platform Plus
+# Chat Platform
 
-Das Projekt besteht aus einem ASP.NET Backend, einem .NET Maui Frontend und React Frontend.
+This project is a playground for various technologies.
+
+- Backend: ASP.NET Core
+- Website: React
+- Mobile App: .NET Maui
+- Realtime communication: SignalR 
